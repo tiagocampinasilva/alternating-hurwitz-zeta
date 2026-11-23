@@ -1,0 +1,32 @@
+Notebook[{Cell[CellGroupData[{Cell["Reproduce the Hurwitz calculations", 
+      "Title", ExpressionUUID -> "c7bfadb4-aec2-4147-b8e3-8ab7fa51a795"], 
+     Cell["Use a working copy of the complete repository. Evaluate the cells \
+in order. The first cell recomputes the verification CSV. The last cell \
+regenerates the two figures and their data.", "Text", 
+      ExpressionUUID -> "9ea9c678-bbef-4a46-8a33-3c556cf6f37a"], 
+     Cell[CellGroupData[{Cell["Wolfram verification", "Section", 
+         ExpressionUUID -> "3ca0b192-541b-44f1-8fbb-06e272be3d36"], 
+        Cell[BoxData[RowBox[{"Get", "[", RowBox[{"FileNameJoin", "[", 
+              RowBox[{"{", RowBox[{RowBox[{"NotebookDirectory", "[", "]"}], 
+                  ",", "\"Verification\"", ",", "\"verification.wl\""}], 
+                "}"}], "]"}], "]"}]], "Input", ExpressionUUID -> 
+          "06fa8bd6-90d3-4c04-a4ec-1fc50d678c92"], 
+        Cell[BoxData[RowBox[{"Dataset", "[", "testes", "]"}]], "Input", 
+         ExpressionUUID -> "80227601-7d8c-4fc8-9e68-c7f91da662f9"]}, Open]], 
+     Cell[CellGroupData[{Cell["Exact coefficients", "Section", 
+         ExpressionUUID -> "20992254-98e6-45e8-b039-72bbb8bc02d4"], 
+        Cell[BoxData[RowBox[{"Dataset", "[", "somas", "]"}]], "Input", 
+         ExpressionUUID -> "fa80caa2-31b1-44cc-8c71-06b9b778b09f"]}, Open]], 
+     Cell[CellGroupData[{Cell["Manuscript figures", "Section", 
+         ExpressionUUID -> "2acb25f6-8ad4-45c7-a763-90621a6a55c4"], 
+        Cell[BoxData[RowBox[{"Get", "[", RowBox[{"FileNameJoin", "[", 
+              RowBox[{"{", RowBox[{RowBox[{"NotebookDirectory", "[", "]"}], 
+                  ",", "\"Figures\"", ",", "\"Manuscript_Figures.wl\""}], 
+                "}"}], "]"}], "]"}]], "Input", ExpressionUUID -> 
+          "f1ef8af1-747b-4f58-a7ad-46f9af6ee61f"]}, Open]]}, Open]]}, 
+ WindowSize -> {808, 719}, WindowMargins -> {{331, Automatic}, 
+   {Automatic, 50}}, WindowTitle -> "Reproduce the Hurwitz calculations", 
+ Visible -> True, FrontEndVersion -> 
+  "15.0 for Mac OS X ARM (64-bit) (July 2, 2026)", 
+ StyleDefinitions -> "Default.nb", ExpressionUUID -> 
+  "31c9a684-cc81-4308-beb3-4d4a1f2895f3"]

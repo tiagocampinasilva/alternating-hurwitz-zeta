@@ -1,0 +1,29 @@
+Manuscript: Explicit Uniform Remainder Estimate for the Alternating Hurwitz Zeta Function in a Joint Large-Parameter Regime.
+
+Wolfram Mathematica kernel: 15.0.1 for Mac OS X ARM (64-bit) (July 2, 2026). Run: 2026-11-23 20:55:01 GMT+01:00 to 2026-11-23 20:55:06 GMT+01:00.
+
+The original notebook was opened, and its six Input cells were evaluated on the copy. Kernel messages by input cell: {}, {}, {}, {}, {}, {}. The copy contains the resulting values and expressions.
+
+13 of 13 manuscript cross-check groups passed. The calculation used 287 grid points at 55 working digits and seven reevaluations at 75 working digits.
+
+The largest sampled scaled error was 8.368197952771194656246194508900493424285942314759891498404438034386e-2, at q = 100 and x = -1.
+
+StringJoin[The largest absolute difference from the manuscript table was 4.020185626455647e-13. The largest difference between the three Abel-Plana integrals and their zeta evaluations was , numeroCSV[0.0000000000000000000000000000000000000000000000000000118666], .]
+
+The exact main-bound coefficient is 371609064358084350147257/86597871701497153200000, strictly below 43/10. The appendix coefficient is 356452924783991052355217/86597871701497153200000, strictly below 4117/1000.
+
+The numerical checks apply to the sampled points. The domain-wide inequality relies on the analytic argument in the manuscript.
+
+Kernel messages from the manuscript checks: {}. Original inputs with aborted, failed or timed-out evaluations: 0.
+
+Source file SHA-256 checks before and after the run: all five originals match.
+
+The comparison used Table 1 and the formulas in the archived LaTeX source. The corresponding manuscript PDF is included for reference. The plot exports were produced by this Mathematica run.
+
+Original source hashes:
+
+1502a88af62c4e162b0016b0c73f0b9b585fd6b068f0dbc5acbcf041a261f5d2  Wolfram/Hurwitz_Calculations.nb
+327ca3b7a501f7ce5bff239c377dd3e12b3956f9369e8a05471bd97652ea74ee  Manuscrito/HurwitzZetaManuscript.tex
+6999455d483bdcc79310452d3d28b9bada62eaa37d4f7c6eb99eaef2c579e1ad  Manuscrito/HurwitzZetaManuscript.pdf
+0dd3ac11a52bd8bb7d17ad50576d2ec934ee79945d10777fe275f8bcf5af46c5  Dados/Hurwitz_Numerical_Results.csv
+f57a7359ebfe6e75fdbdfa654c9956097c0e159ec25f6fb2de30cf81fa56b46f  Reproducibilidade/Wolfram/Hurwitz_Verification_English.wl

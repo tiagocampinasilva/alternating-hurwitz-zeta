@@ -1,0 +1,177 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 15.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[      7528,        167]
+NotebookOptionsPosition[      5746,        136]
+NotebookOutlinePosition[      6198,        154]
+CellTagsIndexPosition[      6155,        151]
+WindowTitle->Hurwitz Final Verification
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["Verification of the alternating Hurwitz zeta calculations", "Title",ExpressionUUID->"3df19f84-92b1-4f0e-a482-36a49fcf0d7f"],
+
+Cell["\<\
+Manuscript: Explicit Uniform Remainder Estimate for the Alternating Hurwitz \
+Zeta Function in a Joint Large-Parameter Regime.\
+\>", "Text",ExpressionUUID->"29ddb87c-24c1-4c8e-b2cb-92684d301280"],
+
+Cell["\<\
+Wolfram Mathematica kernel: 15.0.1 for Mac OS X ARM (64-bit) (July 2, 2026). \
+Run: 2026-11-23 20:55:01 GMT+01:00 to 2026-11-23 20:55:06 GMT+01:00.\
+\>", "Text",ExpressionUUID->"98312659-0768-4ef7-8ad3-4f6b11e950fb"],
+
+Cell["\<\
+The original notebook was opened, and its six Input cells were evaluated on \
+the copy. Kernel messages by input cell: {}, {}, {}, {}, {}, {}. The copy \
+contains the resulting values and expressions.\
+\>", "Text",ExpressionUUID->"1926c2e4-3be4-470f-bde1-174fc44764b0"],
+
+Cell["\<\
+13 of 13 manuscript cross-check groups passed. The calculation used 287 grid \
+points at 55 working digits and seven reevaluations at 75 working digits.\
+\>", "Text",ExpressionUUID->"a0e72dab-0bab-4d51-98df-cb0da62edcc6"],
+
+Cell["\<\
+The largest sampled scaled error was \
+8.368197952771194656246194508900493424285942314759891498404438034386e-2, at q \
+= 100 and x = -1.\
+\>", "Text",ExpressionUUID->"fd76c0f4-59c3-4df6-8e30-694c1e982a8d"],
+
+Cell[BoxData[
+ BoxData["The largest absolute difference from the manuscript table was \
+4.020185626455647e-13. The largest difference between the three Abel-Plana \
+integrals and their zeta evaluations was ", 
+  $CellContext`numeroCSV[
+  Rational[19, 
+     421249166674228746791672110734681729275580381602196445017243910144] 
+   69218866568267110856005^Rational[1, 2]], "."]], "Text",ExpressionUUID->\
+"14b9f30c-ca41-460c-82e5-1a4f20b74bbd"],
+
+Cell["\<\
+The exact main-bound coefficient is \
+371609064358084350147257/86597871701497153200000, strictly below 43/10. The \
+appendix coefficient is 356452924783991052355217/86597871701497153200000, \
+strictly below 4117/1000.\
+\>", "Text",ExpressionUUID->"7f75a39f-43c6-45cf-89cc-1d94f19a1fcf"],
+
+Cell["\<\
+The numerical checks apply to the sampled points. The domain-wide inequality \
+relies on the analytic argument in the manuscript.\
+\>", "Text",ExpressionUUID->"2c0e0688-be47-4750-9a30-069f2423425b"],
+
+Cell["\<\
+Kernel messages from the manuscript checks: {}. Original inputs with aborted, \
+failed or timed-out evaluations: 0.\
+\>", "Text",ExpressionUUID->"8976ba80-2f02-4bd6-ba42-c7737da76aa3"],
+
+Cell["\<\
+Source file SHA-256 checks before and after the run: all five originals match.\
+\>", "Text",ExpressionUUID->"d328323c-f18f-410e-9b0e-a7386e460b2c"],
+
+Cell["\<\
+The comparison used Table 1 and the formulas in the archived LaTeX source. \
+The corresponding manuscript PDF is included for reference. The plot exports \
+were produced by this Mathematica run.\
+\>", "Text",ExpressionUUID->"900767c2-d4f4-4852-b561-e09f8d864481"],
+
+Cell["Manuscript cross-checks", "Section",ExpressionUUID->"78c73c5a-c077-4f10-9804-a50023b0a7ea"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"\<\"s=1, q=1\"\>", "\<\"Pass\"\>"},
+    {"\<\"Nine identities\"\>", "\<\"Pass\"\>"},
+    {"\<\"Exact upper bounds\"\>", "\<\"Pass\"\>"},
+    {"\<\"Sums and margins\"\>", "\<\"Pass\"\>"},
+    {"\<\"287 + 7 keys\"\>", "\<\"Pass\"\>"},
+    {"\<\"CSV, 55 digits (10 fields)\"\>", "\<\"Pass\"\>"},
+    {"\<\"CSV, 75 digits (10 fields)\"\>", "\<\"Pass\"\>"},
+    {"\<\"Stability of q|R| at 55 and 75 digits\"\>", "\<\"Pass\"\>"},
+    {"\<\"Manuscript table (12 decimal places and x)\"\>", "\<\"Pass\"\>"},
+    {"\<\"Original curves (machine precision)\"\>", "\<\"Pass\"\>"},
+    {"\<\"Abel\[Dash]Plana at three points\"\>", "\<\"Pass\"\>"},
+    {"\<\"Main bound at the sampled points\"\>", "\<\"Pass\"\>"},
+    {"\<\"Appendix bound at the sampled points\"\>", "\<\"Pass\"\>"}
+   },
+   AutoDelete->False,
+   GridBoxAlignment->{"Columns" -> {{Left}}},
+   GridBoxDividers->{"Columns" -> {{None}}, "Rows" -> {{True}}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Grid"]], "Output",ExpressionUUID->"37c8718c-7508-4422-8bf2-fe83bd12c532"],
+
+Cell["Sampled maxima", "Section",ExpressionUUID->"10743935-c12f-4943-87c8-cd5a479bc8ec"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"\<\"q\"\>", "\<\"x\"\>", "\<\"Scaled absolute error\"\>"},
+    {"100.`8.", 
+     RowBox[{"-", "1"}], "0.08368197952771194656246194508900493424`15."},
+    {"100.001`8.", 
+     RowBox[{"-", "1"}], "0.08368197682940201856264556470313917943`15."},
+    {"100.5`8.", 
+     RowBox[{"-", "1"}], "0.08368063623339116088382411607105109838`15."},
+    {"101.`8.", 
+     RowBox[{"-", "1"}], "0.08367930457566975274936351316390271611`15."},
+    {"150.`8.", 
+     RowBox[{"-", "1"}], "0.08358744535663079214542137550337401705`15."},
+    {"400.`8.", 
+     RowBox[{"-", "1"}], "0.08344509372521787524648160942997386213`15."},
+    {"1600.`8.", 
+     RowBox[{"-", "1"}], "0.08335051749223601241781716831858377808`15."}
+   },
+   AutoDelete->False,
+   GridBoxAlignment->{"Columns" -> {{Right}}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Grid"]], "Output",ExpressionUUID->"10c2308c-f98e-4d7e-958e-227b9f2a49d4"]
+},
+WindowSize->{808, 717},
+WindowMargins->{{331, Automatic}, {Automatic, 50}},
+WindowTitle->"Hurwitz Final Verification",
+Visible->False,
+FrontEndVersion->"15.0 for Mac OS X ARM (64-bit) (July 2, 2026)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"15c9df59-c8f4-4811-ab4c-222d77670fa9"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[594, 21, 129, 0, 70, "Title",ExpressionUUID->"3df19f84-92b1-4f0e-a482-36a49fcf0d7f"],
+Cell[726, 23, 205, 3, 70, "Text",ExpressionUUID->"29ddb87c-24c1-4c8e-b2cb-92684d301280"],
+Cell[934, 28, 226, 3, 70, "Text",ExpressionUUID->"98312659-0768-4ef7-8ad3-4f6b11e950fb"],
+Cell[1163, 33, 279, 4, 70, "Text",ExpressionUUID->"1926c2e4-3be4-470f-bde1-174fc44764b0"],
+Cell[1445, 39, 231, 3, 70, "Text",ExpressionUUID->"a0e72dab-0bab-4d51-98df-cb0da62edcc6"],
+Cell[1679, 44, 215, 4, 70, "Text",ExpressionUUID->"fd76c0f4-59c3-4df6-8e30-694c1e982a8d"],
+Cell[1897, 50, 441, 8, 70, "Text",ExpressionUUID->"14b9f30c-ca41-460c-82e5-1a4f20b74bbd"],
+Cell[2341, 60, 296, 5, 70, "Text",ExpressionUUID->"7f75a39f-43c6-45cf-89cc-1d94f19a1fcf"],
+Cell[2640, 67, 208, 3, 70, "Text",ExpressionUUID->"2c0e0688-be47-4750-9a30-069f2423425b"],
+Cell[2851, 72, 194, 3, 70, "Text",ExpressionUUID->"8976ba80-2f02-4bd6-ba42-c7737da76aa3"],
+Cell[3048, 77, 157, 2, 70, "Text",ExpressionUUID->"d328323c-f18f-410e-9b0e-a7386e460b2c"],
+Cell[3208, 81, 273, 4, 70, "Text",ExpressionUUID->"900767c2-d4f4-4852-b561-e09f8d864481"],
+Cell[3484, 87, 97, 0, 70, "Section",ExpressionUUID->"78c73c5a-c077-4f10-9804-a50023b0a7ea"],
+Cell[3584, 89, 1099, 20, 70, "Output",ExpressionUUID->"37c8718c-7508-4422-8bf2-fe83bd12c532"],
+Cell[4686, 111, 88, 0, 70, "Section",ExpressionUUID->"10743935-c12f-4943-87c8-cd5a479bc8ec"],
+Cell[4777, 113, 965, 21, 70, "Output",ExpressionUUID->"10c2308c-f98e-4d7e-958e-227b9f2a49d4"]
+}
+]
+*)
+
+(* End of internal cache information *)
+

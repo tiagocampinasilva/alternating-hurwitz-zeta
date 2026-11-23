@@ -1,0 +1,1084 @@
+Notebook[{Cell[CellGroupData[{Cell["Explicit Uniform Remainder Estimate for \
+the Alternating Hurwitz Zeta Function in a Joint Large-Parameter Regime", 
+      "Title", ExpressionUUID -> "45386ed7-5f04-4434-ad1e-d2f797c61fce"], 
+     Cell["Tiago Manuel Serafim Campina da Silva", "Author", 
+      ExpressionUUID -> "925f4c76-e6a5-4883-9d9e-bdafdaadeca2"], 
+     Cell[CellGroupData[
+       {Cell["Python code generation and independent verification", 
+         "Subtitle", ExpressionUUID -> 
+          "42a7e48c-a3b6-4f28-bf04-3f98e7b3eca5"], Cell["Evaluate the \
+notebook in order. The source templates and Table 1 are embedded. The export \
+cell writes three Python files beside this notebook. The final cell reads the \
+CSV produced by the numerical program.", "Text", ExpressionUUID -> 
+          "235d32e1-5149-4cc4-806d-6633674f5ac3"], 
+        Cell[CellGroupData[{Cell["Equations (1)\[Dash](5) and Table 1", 
+            "Section", ExpressionUUID -> 
+             "31a204b6-1a8f-4a5f-9fc0-3896cc1a98bd"], 
+           Cell[CellGroupData[{Cell[BoxData[RowBox[{RowBox[{"base", "=", 
+                    RowBox[{"NotebookDirectory", "[", "]"}]}], ";", 
+                  RowBox[{"tableOne", "=", RowBox[{"{", RowBox[{RowBox[
+                         {"{", RowBox[{"\"100\"", ",", "\"-1\"", ",", 
+                          "\"0.083681979528\""}], "}"}], ",", RowBox[
+                         {"{", RowBox[{"\"100.001\"", ",", "\"-1\"", ",", 
+                          "\"0.083681976829\""}], "}"}], ",", RowBox[
+                         {"{", RowBox[{"\"100.5\"", ",", "\"-1\"", ",", 
+                          "\"0.083680636233\""}], "}"}], ",", RowBox[
+                         {"{", RowBox[{"\"101\"", ",", "\"-1\"", ",", 
+                          "\"0.083679304576\""}], "}"}], ",", RowBox[
+                         {"{", RowBox[{"\"150\"", ",", "\"-1\"", ",", 
+                          "\"0.083587445357\""}], "}"}], ",", RowBox[
+                         {"{", RowBox[{"\"400\"", ",", "\"-1\"", ",", 
+                          "\"0.083445093725\""}], "}"}], ",", RowBox[
+                         {"{", RowBox[{"\"1600\"", ",", "\"-1\"", ",", 
+                          "\"0.083350517492\""}], "}"}]}], "}"}]}], ";", 
+                  RowBox[{RowBox[{"parseDecimal", "[", "s_String", "]"}], 
+                    ":=", RowBox[{"Module", "[", RowBox[{RowBox[{"{", 
+                          RowBox[{"parts", ",", "mantissa", ",", "digits", 
+                          ",", "places", ",", "e", ",", "sign"}], "}"}], ",", 
+                        RowBox[{RowBox[{"If", "[", RowBox[{RowBox[{"!", 
+                          RowBox[{"StringMatchQ", "[", RowBox[{"s", ",", 
+                          RowBox[{"RegularExpression", "[", "\"[+-]?[0-9]+(?:\
+\\\\.[0-9]*)?(?:[eE][+-]?[0-9]+)?\"", "]"}]}], "]"}]}], ",", RowBox[
+                          {"Return", "[", "$Failed", "]"}]}], "]"}], ";", 
+                          RowBox[{"parts", "=", RowBox[{"StringSplit", "[", 
+                          RowBox[{RowBox[{"ToLowerCase", "[", "s", "]"}], 
+                          ",", "\"e\""}], "]"}]}], ";", RowBox[{"mantissa", 
+                          "=", RowBox[{"First", "[", "parts", "]"}]}], ";", 
+                          RowBox[{"e", "=", RowBox[{"If", "[", RowBox[
+                          {RowBox[{RowBox[{"Length", "[", "parts", "]"}], 
+                          "\[Equal]", "2"}], ",", RowBox[{"ToExpression", 
+                          "[", RowBox[{"Last", "[", "parts", "]"}], "]"}], 
+                          ",", "0"}], "]"}]}], ";", RowBox[{"sign", "=", 
+                          RowBox[{"If", "[", RowBox[{RowBox[{"StringStartsQ", 
+                          "[", RowBox[{"mantissa", ",", "\"-\""}], "]"}], 
+                          ",", RowBox[{"-", "1"}], ",", "1"}], "]"}]}], ";", 
+                          RowBox[{"digits", "=", RowBox[{"StringDelete", "[", 
+                          RowBox[{"mantissa", ",", RowBox[{"{", RowBox[
+                          {"\"-\"", ",", "\"+\""}], "}"}]}], "]"}]}], ";", 
+                          RowBox[{"places", "=", RowBox[{"If", "[", RowBox[
+                          {RowBox[{"StringContainsQ", "[", RowBox[{"digits", 
+                          ",", "\".\""}], "]"}], ",", RowBox[{"StringLength", 
+                          "[", RowBox[{"Last", "[", RowBox[{"StringSplit", 
+                          "[", RowBox[{"digits", ",", "\".\""}], "]"}], 
+                          "]"}], "]"}], ",", "0"}], "]"}]}], ";", RowBox[
+                          {"sign", " ", RowBox[{"FromDigits", "[", RowBox[
+                          {"StringDelete", "[", RowBox[{"digits", ",", 
+                          "\".\""}], "]"}], "]"}], " ", SuperscriptBox["10", 
+                          RowBox[{"e", "-", "places"}]]}]}]}], "]"}]}], ";", 
+                  RowBox[{"qGrid", "=", RowBox[{"parseDecimal", "/@", 
+                      RowBox[{"tableOne", "\[LeftDoubleBracket]", RowBox[
+                         {"All", ",", "1"}], "\[RightDoubleBracket]"}]}]}], 
+                  ";", RowBox[{"xGrid", "=", RowBox[{"Range", "[", RowBox[
+                       {RowBox[{"-", "1"}], ",", "1", ",", FractionBox["1", 
+                         "20"]}], "]"}]}], ";", RowBox[{RowBox[{"height", 
+                      "[", RowBox[{"q_", ",", "x_"}], "]"}], ":=", 
+                    RowBox[{RowBox[{"\[Pi]", " ", "q"}], "+", RowBox[
+                       {"x", " ", SqrtBox["q"]}]}]}], ";", RowBox[
+                   {RowBox[{"altZeta", "[", RowBox[{"s_", ",", "q_"}], "]"}], 
+                    ":=", RowBox[{"If", "[", RowBox[{RowBox[{"TrueQ", "[", 
+                          RowBox[{"s", "\[Equal]", "1"}], "]"}], ",", 
+                        RowBox[{FractionBox["1", "2"], " ", RowBox[{"(", 
+                          RowBox[{RowBox[{"PolyGamma", "[", RowBox[{"0", ",", 
+                          FractionBox[RowBox[{"q", "+", "1"}], "2"]}], "]"}], 
+                          "-", RowBox[{"PolyGamma", "[", RowBox[{"0", ",", 
+                          FractionBox["q", "2"]}], "]"}]}], ")"}]}], ",", 
+                        FractionBox[RowBox[{RowBox[{"Zeta", "[", RowBox[
+                          {"s", ",", FractionBox["q", "2"]}], "]"}], "-", 
+                          RowBox[{"Zeta", "[", RowBox[{"s", ",", FractionBox[
+                          RowBox[{"q", "+", "1"}], "2"]}], "]"}]}], 
+                         SuperscriptBox["2", "s"]]}], "]"}]}], ";", 
+                  RowBox[{RowBox[{"zValue", "[", RowBox[{"q_", ",", "x_", 
+                        ",", "p_"}], "]"}], ":=", RowBox[{"With", "[", 
+                      RowBox[{RowBox[{"{", RowBox[{"t", "=", RowBox[{"N", 
+                          "[", RowBox[{RowBox[{"height", "[", RowBox[{"q", 
+                          ",", "x"}], "]"}], ",", "p"}], "]"}]}], "}"}], ",", 
+                        RowBox[{RowBox[{"Exp", "[", RowBox[{"\[ImaginaryI]", 
+                          " ", "t", " ", RowBox[{"Log", "[", "q", "]"}]}], 
+                          "]"}], " ", RowBox[{"altZeta", "[", RowBox[
+                          {RowBox[{FractionBox["1", "2"], "+", RowBox[
+                          {"\[ImaginaryI]", " ", "t"}]}], ",", "q"}], 
+                          "]"}]}]}], "]"}]}], ";", RowBox[{RowBox[{"profile", 
+                      "[", "x_", "]"}], ":=", RowBox[{FractionBox["1", "2"], 
+                      " ", RowBox[{"(", RowBox[{"1", "+", "\[ImaginaryI]"}], 
+                        ")"}], " ", RowBox[{"Exp", "[", RowBox[{"-", 
+                          FractionBox[RowBox[{"\[ImaginaryI]", " ", 
+                          SuperscriptBox["x", "2"]}], RowBox[{"2", " ", 
+                          "\[Pi]"}]]}], "]"}], " ", RowBox[{"Erfc", "[", 
+                        RowBox[{"-", FractionBox[RowBox[{RowBox[{"Exp", "[", 
+                          RowBox[{FractionBox["1", "4"], " ", RowBox[{"(", 
+                          RowBox[{"-", "\[ImaginaryI]"}], ")"}], " ", 
+                          "\[Pi]"}], "]"}], " ", "x"}], SqrtBox[RowBox[
+                          {"2", " ", "\[Pi]"}]]]}], "]"}]}]}], ";", 
+                  RowBox[{RowBox[{"correction", "[", RowBox[{"x_", ",", 
+                        "f_"}], "]"}], ":=", RowBox[{FractionBox["1", "2"], 
+                      "+", FractionBox["\[ImaginaryI]", RowBox[{"6", " ", 
+                         "\[Pi]"}]], "-", FractionBox[RowBox[{SuperscriptBox[
+                          "x", "2"], " ", RowBox[{"(", RowBox[{"1", "-", 
+                          RowBox[{"\[ImaginaryI]", " ", "x", " ", "f"}]}], 
+                          ")"}]}], RowBox[{"6", " ", SuperscriptBox["\[Pi]", 
+                          "2"]}]]}]}], ";", RowBox[{RowBox[{"twoTerms", "[", 
+                      RowBox[{"q_", ",", "f_", ",", "g_"}], "]"}], ":=", 
+                    RowBox[{"f", "+", FractionBox["g", SqrtBox["q"]]}]}], 
+                  ";", "$Version"}]], "Input", CellLabel -> " In[1]:=", 
+               ExpressionUUID -> "2654a0d8-0069-44c9-bc23-ffa0140112ea"], 
+              Cell[OutputFormData[
+                "15.0.1 for Mac OS X ARM (64-bit) (July 2, 2026)"], "Output", 
+               CellChangeTimes -> {4.0043731820154047*^9, 
+                 4.004373281843052*^9}, CellLabel -> "", ExpressionUUID -> 
+                "5b1c78de-4e25-4953-b440-86c6a920050d"]}, Open]]}, Open]], 
+        Cell[CellGroupData[{Cell["Rational bounds", "Section", 
+            ExpressionUUID -> "cec1eabf-0901-4c9a-a501-a9cdad485abe"], 
+           Cell["The even Gaussian moments propagate the upper bound 67/80. \
+Appendix 1 gives the short-interval multiplier 3 as a possible refinement.", 
+            "Text", ExpressionUUID -> 
+             "e7b3cd83-ecdb-4288-9299-26231cbed280"], 
+           Cell[CellGroupData[{Cell[BoxData[RowBox[{RowBox[{"majorant", "=", 
+                    RowBox[{"Expand", "[", RowBox[{SuperscriptBox[RowBox[
+                          {"(", RowBox[{FractionBox["u", "2"], "+", 
+                          FractionBox[SuperscriptBox["u", "2"], "2"], "+", 
+                          FractionBox[RowBox[{"22", " ", SuperscriptBox["u", 
+                          "3"]}], "21"]}], ")"}], "2"], "+", FractionBox[
+                         SuperscriptBox["u", "2"], "2"], "+", FractionBox[
+                         RowBox[{"2", " ", SuperscriptBox["u", "3"]}], "3"], 
+                        "+", FractionBox[RowBox[{"11", " ", SuperscriptBox[
+                          "u", "4"]}], "7"]}], "]"}]}], ";", RowBox[
+                   {RowBox[{"moment", "[", "j_", "]"}], ":=", FractionBox[
+                     RowBox[{RowBox[{"j", "!"}], " ", RowBox[{"Zeta", "[", 
+                         RowBox[{"j", "+", "1"}], "]"}]}], SuperscriptBox[
+                      RowBox[{"(", RowBox[{"2", " ", "\[Pi]"}], ")"}], 
+                      RowBox[{"j", "+", "1"}]]]}], ";", RowBox[
+                   {RowBox[{"oddMoment", "[", "j_", "]"}], ":=", FractionBox[
+                     RowBox[{RowBox[{"j", "!"}], " ", RowBox[{"(", RowBox[
+                          {"1", "-", SuperscriptBox["2", RowBox[{RowBox[
+                          {"-", "j"}], "-", "1"}]]}], ")"}], " ", RowBox[
+                        {"Zeta", "[", RowBox[{"j", "+", "1"}], "]"}]}], 
+                     SuperscriptBox["\[Pi]", RowBox[{"j", "+", "1"}]]]}], 
+                  ";", RowBox[{RowBox[{"gaussian", "[", "0", "]"}], "=", 
+                    FractionBox["67", "80"]}], ";", RowBox[{RowBox[
+                     {"gaussian", "[", "1", "]"}], "=", FractionBox["1", 
+                     FractionBox[RowBox[{"2", " ", "9"}], "8"]]}], ";", 
+                  RowBox[{RowBox[{"gaussian", "[", RowBox[{"j_Integer", "/;", 
+                        RowBox[{"j", "\[GreaterEqual]", "2"}]}], "]"}], ":=", 
+                    FractionBox[RowBox[{RowBox[{"(", RowBox[{"j", "-", "1"}], 
+                         ")"}], " ", RowBox[{"gaussian", "[", RowBox[{"j", 
+                          "-", "2"}], "]"}]}], FractionBox[RowBox[{"2", " ", 
+                        "9"}], "8"]]}], ";", RowBox[{"jbar", "=", RowBox[
+                     {UnderoverscriptBox["\[Sum]", RowBox[{"j", "=", "2"}], 
+                       "6"], RowBox[{RowBox[{"Coefficient", "[", RowBox[
+                          {"majorant", ",", "u", ",", "j"}], "]"}], " ", 
+                        RowBox[{"(", RowBox[{FractionBox[RowBox[{"7", " ", 
+                          RowBox[{"gaussian", "[", "j", "]"}]}], "4"], "+", 
+                          FractionBox[RowBox[{"j", "!"}], SuperscriptBox[
+                          RowBox[{"(", FractionBox["67", "20"], ")"}], 
+                          RowBox[{"j", "+", "1"}]]]}], ")"}]}]}]}], ";", 
+                  RowBox[{RowBox[{"short", "[", "m_", "]"}], ":=", 
+                    RowBox[{RowBox[{"m", " ", RowBox[{"(", RowBox[{RowBox[
+                          {RowBox[{"(", RowBox[{"2", "+", FractionBox["1", 
+                          "10"]}], ")"}], " ", RowBox[{"moment", "[", "1", 
+                          "]"}]}], "+", FractionBox[RowBox[{"2", " ", "22", 
+                          " ", SuperscriptBox[RowBox[{"(", FractionBox["1", 
+                          "10"], ")"}], "3"], " ", RowBox[{"moment", "[", 
+                          "3", "]"}]}], RowBox[{"7", " ", "3"}]]}], ")"}]}], 
+                      "+", FractionBox["1", SuperscriptBox["10", "5"]]}]}], 
+                  ";", RowBox[{"bg", "=", RowBox[{RowBox[{RowBox[{"(", 
+                          RowBox[{"2", "+", FractionBox["1", "10"]}], ")"}], 
+                        " ", RowBox[{"oddMoment", "[", "1", "]"}]}], "+", 
+                      FractionBox[RowBox[{"2", " ", "22", " ", SuperscriptBox[
+                          RowBox[{"(", FractionBox["1", "10"], ")"}], "3"], 
+                         " ", RowBox[{"oddMoment", "[", "3", "]"}]}], 
+                       RowBox[{"7", " ", "3"}]]}]}], ";", RowBox[{"cSplit", 
+                    "=", RowBox[{FractionBox["jbar", "2"], "+", RowBox[
+                       {"short", "[", "5", "]"}]}]}], ";", RowBox[{"cGlobal", 
+                    "=", RowBox[{FractionBox["jbar", "2"], "+", "bg"}]}], 
+                  ";", RowBox[{"cAppendix", "=", RowBox[{FractionBox["jbar", 
+                       "2"], "+", RowBox[{"short", "[", "3", "]"}]}]}], ";", 
+                  RowBox[{"r0", "=", FractionBox["3", "10"]}], ";", 
+                  RowBox[{"mesh", "=", FractionBox["r0", "4096"]}], ";", 
+                  RowBox[{"dFloor", "=", FractionBox[RowBox[{"mesh", " ", 
+                       RowBox[{"Total", "[", RowBox[{"Table", "[", RowBox[
+                          {RowBox[{"With", "[", RowBox[{RowBox[{"{", RowBox[
+                          {"r", "=", RowBox[{"j", " ", "mesh"}]}], "}"}], 
+                          ",", RowBox[{"With", "[", RowBox[{RowBox[{"{", 
+                          RowBox[{"b", "=", RowBox[{FractionBox[RowBox[
+                          {"1414213", " ", "r"}], SuperscriptBox["10", "6"]], 
+                          "+", SuperscriptBox["r", "2"]}]}], "}"}], ",", 
+                          RowBox[{"Floor", "[", FractionBox[RowBox[
+                          {SuperscriptBox["10", "12"], " ", "b"}], 
+                          FractionBox[RowBox[{"1414214", " ", RowBox[{"(", 
+                          RowBox[{"1", "+", "b"}], ")"}]}], SuperscriptBox[
+                          "10", "6"]]], "]"}]}], "]"}]}], "]"}], ",", RowBox[
+                          {"{", RowBox[{"j", ",", "0", ",", "4095"}], 
+                          "}"}]}], "]"}], "]"}]}], SuperscriptBox["10", 
+                      "12"]]}], ";", RowBox[{"exactValues", "=", RowBox[
+                     {"{", RowBox[{"jbar", ",", RowBox[{"short", "[", "5", 
+                          "]"}], ",", "bg", ",", RowBox[{"short", "[", "3", 
+                          "]"}], ",", "cSplit", ",", "cGlobal", ",", 
+                        "cAppendix", ",", "dFloor"}], "}"}]}], ";", 
+                  RowBox[{"expectedExact", "=", RowBox[{"{", RowBox[
+                       {FractionBox["533948559110614545113", 
+                         "69278297361197722560"], ",", FractionBox["689147", 
+                         "1575000"], ",", FractionBox["22061", "84000"], ",", 
+                        RowBox[{FractionBox["3", "12"], "+", FractionBox["3", 
+                          "240"], "+", FractionBox["22", RowBox[{"7", " ", 
+                          "120000"}]], "+", FractionBox["1", SuperscriptBox[
+                          "10", "5"]]}], ",", FractionBox[
+                         "371609064358084350147257", 
+                         "86597871701497153200000"], ",", FractionBox[
+                         "14258445238530472531037", 
+                         "3463914868059886128000"], ",", FractionBox[
+                         "356452924783991052355217", 
+                         "86597871701497153200000"], ",", FractionBox[
+                         "1592131749274149", "40960000000000000"]}], "}"}]}], 
+                  ";", RowBox[{"If", "[", RowBox[{RowBox[{"exactValues", 
+                        "=!=", "expectedExact"}], ",", RowBox[{"Abort", "[", 
+                        "]"}]}], "]"}], ";", RowBox[{"Association", "[", 
+                    RowBox[{RowBox[{"\"Exact values\"", "\[Rule]", 
+                        "exactValues"}], ",", RowBox[{"\"Strict margins\"", 
+                        "\[Rule]", RowBox[{"{", RowBox[{RowBox[{FractionBox[
+                          "43", "10"], "-", "cSplit"}], ",", RowBox[
+                          {FractionBox["4117", "1000"], "-", "cGlobal"}], 
+                          ",", RowBox[{FractionBox["4117", "1000"], "-", 
+                          "cAppendix"}]}], "}"}]}]}], "]"}]}]], "Input", 
+               CellLabel -> " In[2]:=", ExpressionUUID -> 
+                "c1d37e9e-2733-4272-9845-3c21f335521b"], Cell[OutputFormData[
+                "<|Exact values -> \
+{533948559110614545113/69278297361197722560, 689147/1575000, 22061/84000, \
+275663/1050000, 371609064358084350147257/86597871701497153200000, \
+14258445238530472531037/3463914868059886128000, \
+356452924783991052355217/86597871701497153200000, \
+1592131749274149/40960000000000000}, Strict margins -> \
+{761783958353408612743/86597871701497153200000, \
+2492273272078657939/3463914868059886128000, \
+70513011072727369183/86597871701497153200000}|>"], "Output", 
+               CellChangeTimes -> {4.0043731820441523*^9, 
+                 4.004373281880972*^9}, CellLabel -> "", ExpressionUUID -> 
+                "fcef62c7-0c18-4432-af67-bee9d06957a0"]}, Open]]}, Open]], 
+        Cell[CellGroupData[{Cell["Symbolic residuals", "Section", 
+            ExpressionUUID -> "49384008-dc33-45c8-9ea5-9275a6f7ee82"], 
+           Cell["Order follows the individual checks printed by the SymPy \
+program.", "Text", ExpressionUUID -> "bd80f4f5-d815-42e3-b5f2-ef240eb3350a"], 
+           Cell[CellGroupData[{Cell[BoxData[RowBox[{RowBox[{"wlResiduals", 
+                    "=", RowBox[{"Module", "[", RowBox[{RowBox[{"{", RowBox[
+                          {"a", ",", "w", ",", "v", ",", "b", ",", "h", ",", 
+                          "x", ",", "y", ",", "z", ",", "r", ",", "ff", ",", 
+                          "theta", ",", "k", ",", "dh", ",", "t", ",", "pp", 
+                          ",", "psi", ",", "linear", ",", "phi", ",", 
+                          "angle", ",", "delta", ",", "den", ",", "f1", ",", 
+                          "f2", ",", "f3", ",", "der", ",", "jone", ",", 
+                          "raw"}], "}"}], ",", RowBox[{RowBox[{"k", "=", 
+                          FractionBox[RowBox[{RowBox[{"a", " ", "w"}], "-", 
+                          "v"}], RowBox[{"1", "-", "a"}]]}], ";", RowBox[
+                          {"t", "=", RowBox[{FractionBox["\[Pi]", 
+                          SuperscriptBox["h", "2"]], "+", FractionBox["x", 
+                          "h"]}]}], ";", RowBox[{"theta", "=", RowBox[
+                          {"ArcTan", "[", RowBox[{"y", " ", SuperscriptBox[
+                          "h", "2"]}], "]"}]}], ";", RowBox[{"dh", "=", 
+                          RowBox[{RowBox[{"2", " ", "\[Pi]", " ", "y"}], "-", 
+                          RowBox[{"2", " ", "t", " ", "theta"}], "+", RowBox[
+                          {"\[ImaginaryI]", " ", "theta"}]}]}], ";", RowBox[
+                          {"pp", "=", RowBox[{SuperscriptBox[RowBox[{"(", 
+                          RowBox[{"1", "+", RowBox[{"\[ImaginaryI]", " ", 
+                          "y", " ", SuperscriptBox["h", "2"]}]}], ")"}], 
+                          RowBox[{RowBox[{"-", FractionBox["1", "2"]}], "-", 
+                          RowBox[{"\[ImaginaryI]", " ", "t"}]}]], "-", 
+                          SuperscriptBox[RowBox[{"(", RowBox[{"1", "-", 
+                          RowBox[{"\[ImaginaryI]", " ", "y", " ", 
+                          SuperscriptBox["h", "2"]}]}], ")"}], RowBox[
+                          {RowBox[{"-", FractionBox["1", "2"]}], "-", RowBox[
+                          {"\[ImaginaryI]", " ", "t"}]}]]}]}], ";", RowBox[
+                          {"psi", "=", RowBox[{RowBox[{"-", FractionBox[
+                          RowBox[{"\[Pi]", " ", "z"}], "h"]}], "-", RowBox[
+                          {RowBox[{"(", RowBox[{FractionBox["1", "2"], "+", 
+                          RowBox[{"\[ImaginaryI]", " ", "t"}]}], ")"}], " ", 
+                          RowBox[{"Log", "[", RowBox[{"1", "+", RowBox[
+                          {"\[ImaginaryI]", " ", "h", " ", "z"}]}], 
+                          "]"}]}]}]}], ";", RowBox[{"phi", "=", RowBox[
+                          {RowBox[{"x", " ", "z"}], "-", RowBox[{FractionBox[
+                          "1", "2"], " ", "\[ImaginaryI]", " ", "\[Pi]", " ", 
+                          SuperscriptBox["z", "2"]}]}]}], ";", RowBox[
+                          {"linear", "=", RowBox[{RowBox[{FractionBox["1", 
+                          "2"], " ", RowBox[{"(", RowBox[{"-", 
+                          "\[ImaginaryI]"}], ")"}], " ", "z"}], "-", RowBox[
+                          {FractionBox["1", "2"], " ", "\[ImaginaryI]", " ", 
+                          "x", " ", SuperscriptBox["z", "2"]}], "-", 
+                          FractionBox[RowBox[{"\[Pi]", " ", SuperscriptBox[
+                          "z", "3"]}], "3"]}]}], ";", RowBox[{"angle", "=", 
+                          RowBox[{"ArcTan", "[", FractionBox["r", RowBox[
+                          {SqrtBox["2"], "+", "r"}]], "]"}]}], ";", RowBox[
+                          {"delta", "=", RowBox[{FractionBox["r", SqrtBox[
+                          "2"]], "-", "angle"}]}], ";", RowBox[{"den", "=", 
+                          RowBox[{"1", "+", RowBox[{SqrtBox["2"], " ", "r"}], 
+                          "+", SuperscriptBox["r", "2"]}]}], ";", RowBox[
+                          {"f1", "=", FractionBox[RowBox[{"1", "-", RowBox[
+                          {"\[ImaginaryI]", " ", "x", " ", "ff"}]}], 
+                          "\[Pi]"]}], ";", RowBox[{RowBox[{"der", "[", 
+                          "expr_", "]"}], ":=", RowBox[{RowBox[{SubscriptBox[
+                          "\[PartialD]", "x"], "expr"}], "+", RowBox[{"f1", 
+                          " ", RowBox[{SubscriptBox["\[PartialD]", "ff"], 
+                          "expr"}]}]}]}], ";", RowBox[{"f2", "=", RowBox[
+                          {"der", "[", "f1", "]"}]}], ";", RowBox[{"f3", "=", 
+                          RowBox[{"der", "[", "f2", "]"}]}], ";", RowBox[
+                          {"jone", "=", RowBox[{RowBox[{FractionBox["1", 
+                          "2"], " ", RowBox[{"(", RowBox[{"-", 
+                          "\[ImaginaryI]"}], ")"}], " ", "f1"}], "-", 
+                          FractionBox[RowBox[{"\[ImaginaryI]", " ", "x", " ", 
+                          "f2"}], "2"], "-", FractionBox[RowBox[{"\[Pi]", 
+                          " ", "f3"}], "3"]}]}], ";", RowBox[{"raw", "=", 
+                          RowBox[{"{", RowBox[{RowBox[{RowBox[{FractionBox[
+                          "1", "2"], " ", RowBox[{"(", RowBox[{"1", "+", 
+                          RowBox[{"Tanh", "[", FractionBox["b", "2"], 
+                          "]"}]}], ")"}]}], "-", FractionBox["1", RowBox[
+                          {"1", "+", RowBox[{"Exp", "[", RowBox[{"-", "b"}], 
+                          "]"}]}]]}], ",", RowBox[{FractionBox[RowBox[{"w", 
+                          "-", "v"}], RowBox[{"1", "-", "a"}]], "-", "w", 
+                          "-", "k"}], ",", RowBox[{"k", "-", FractionBox[
+                          RowBox[{"w", " ", RowBox[{"(", RowBox[{"1", "-", 
+                          FractionBox["v", RowBox[{"a", " ", "w"}]]}], 
+                          ")"}]}], RowBox[{FractionBox["1", "a"], "-", 
+                          "1"}]]}], ",", RowBox[{RowBox[{"-", FractionBox[
+                          RowBox[{RowBox[{SubscriptBox["\[PartialD]", "y"], 
+                          "dh"}], "/.", "\[VeryThinSpace]", RowBox[{"y", 
+                          "\[Rule]", "0"}]}], RowBox[{"2", " ", "\[Pi]"}]]}], 
+                          "-", FractionBox[RowBox[{"x", " ", "h"}], "\[Pi]"], 
+                          "+", FractionBox[RowBox[{"\[ImaginaryI]", " ", 
+                          SuperscriptBox["h", "2"]}], RowBox[{"2", " ", 
+                          "\[Pi]"}]]}], ",", RowBox[{FractionBox[RowBox[
+                          {RowBox[{SubscriptBox["\[PartialD]", "y"], "pp"}], 
+                          "/.", "\[VeryThinSpace]", RowBox[{"y", "\[Rule]", 
+                          "0"}]}], RowBox[{"2", " ", "\[Pi]"}]], "+", 
+                          FractionBox[RowBox[{"\[ImaginaryI]", " ", RowBox[
+                          {"(", RowBox[{FractionBox["1", "2"], "+", RowBox[
+                          {"\[ImaginaryI]", " ", "t"}]}], ")"}], " ", 
+                          SuperscriptBox["h", "2"]}], "\[Pi]"]}], ",", RowBox[
+                          {RowBox[{"SeriesCoefficient", "[", RowBox[{"psi", 
+                          ",", RowBox[{"{", RowBox[{"h", ",", "0", ",", 
+                          "0"}], "}"}]}], "]"}], "-", "phi"}], ",", RowBox[
+                          {RowBox[{"SeriesCoefficient", "[", RowBox[{"psi", 
+                          ",", RowBox[{"{", RowBox[{"h", ",", "0", ",", 
+                          "1"}], "}"}]}], "]"}], "-", "linear"}], ",", RowBox[
+                          {RowBox[{SubscriptBox["\[PartialD]", "r"], 
+                          "angle"}], "-", FractionBox["1", RowBox[{SqrtBox[
+                          "2"], " ", "den"}]]}], ",", RowBox[{FractionBox[
+                          RowBox[{SubscriptBox["\[PartialD]", "r"], 
+                          "delta"}], "r"], "-", FractionBox[RowBox[{"1", "+", 
+                          FractionBox["r", SqrtBox["2"]]}], "den"]}], ",", 
+                          RowBox[{RowBox[{SubscriptBox["\[PartialD]", "r"], 
+                          FractionBox[RowBox[{SubscriptBox["\[PartialD]", 
+                          "r"], "delta"}], "r"]}], "+", FractionBox[RowBox[
+                          {FractionBox["1", SqrtBox["2"]], "+", RowBox[{"2", 
+                          " ", "r"}], "+", FractionBox[SuperscriptBox["r", 
+                          "2"], SqrtBox["2"]]}], SuperscriptBox["den", 
+                          "2"]]}], ",", RowBox[{RowBox[{"profile", "[", "0", 
+                          "]"}], "-", FractionBox[RowBox[{"1", "+", 
+                          "\[ImaginaryI]"}], "2"]}], ",", RowBox[{RowBox[
+                          {"\[Pi]", " ", RowBox[{SubscriptBox["\[PartialD]", 
+                          "x"], RowBox[{"profile", "[", "x", "]"}]}]}], "-", 
+                          "1", "+", RowBox[{"\[ImaginaryI]", " ", "x", " ", 
+                          RowBox[{"profile", "[", "x", "]"}]}]}], ",", RowBox[
+                          {RowBox[{"\[Pi]", " ", "f2"}], "+", RowBox[
+                          {"\[ImaginaryI]", " ", "ff"}], "+", RowBox[
+                          {"\[ImaginaryI]", " ", "x", " ", "f1"}]}], ",", 
+                          RowBox[{RowBox[{"\[Pi]", " ", "f3"}], "+", RowBox[
+                          {"2", " ", "\[ImaginaryI]", " ", "f1"}], "+", 
+                          RowBox[{"\[ImaginaryI]", " ", "x", " ", "f2"}]}], 
+                          ",", RowBox[{"jone", "-", RowBox[{FractionBox["1", 
+                          "6"], " ", "\[ImaginaryI]", " ", RowBox[{"(", 
+                          RowBox[{"f1", "-", RowBox[{"x", " ", "f2"}]}], 
+                          ")"}]}]}], ",", RowBox[{RowBox[{"correction", "[", 
+                          RowBox[{"x", ",", "ff"}], "]"}], "-", FractionBox[
+                          "1", "2"], "-", "jone"}], ",", RowBox[{"majorant", 
+                          "-", RowBox[{"(", RowBox[{FractionBox[RowBox[{"3", 
+                          " ", SuperscriptBox["u", "2"]}], "4"], "+", 
+                          FractionBox[RowBox[{"7", " ", SuperscriptBox["u", 
+                          "3"]}], "6"], "+", FractionBox[RowBox[{"241", " ", 
+                          SuperscriptBox["u", "4"]}], "84"], "+", FractionBox[
+                          RowBox[{"22", " ", SuperscriptBox["u", "5"]}], 
+                          "21"], "+", FractionBox[RowBox[{"484", " ", 
+                          SuperscriptBox["u", "6"]}], "441"]}], ")"}]}], ",", 
+                          RowBox[{RowBox[{"moment", "[", "1", "]"}], "-", 
+                          FractionBox["1", "24"]}], ",", RowBox[{RowBox[
+                          {"oddMoment", "[", "1", "]"}], "-", FractionBox[
+                          "1", "8"]}], ",", RowBox[{RowBox[{"moment", "[", 
+                          "3", "]"}], "-", FractionBox["1", "240"]}], ",", 
+                          RowBox[{RowBox[{"oddMoment", "[", "3", "]"}], "-", 
+                          FractionBox["1", "16"]}]}], "}"}]}], ";", RowBox[
+                          {RowBox[{"(", RowBox[{RowBox[{"FullSimplify", "[", 
+                          RowBox[{"#1", ",", RowBox[{"Assumptions", 
+                          "\[Rule]", RowBox[{RowBox[{"b", ">", "0"}], "&&", 
+                          RowBox[{"0", "<", "a", "<", "1"}], "&&", RowBox[
+                          {"w", "\[NotEqual]", "0"}], "&&", RowBox[{"r", ">", 
+                          "0"}], "&&", RowBox[{"h", ">", "0"}], "&&", RowBox[
+                          {"x", "\[Element]", TemplateBox[{}, 
+                          "Reals"]}]}]}]}], "]"}], "&"}], ")"}], "/@", 
+                          "raw"}]}]}], "]"}]}], ";", RowBox[{"If", "[", 
+                    RowBox[{RowBox[{"wlResiduals", "=!=", RowBox[
+                         {"ConstantArray", "[", RowBox[{"0", ",", "21"}], 
+                          "]"}]}], ",", RowBox[{RowBox[{"Print", "[", 
+                          "wlResiduals", "]"}], ";", RowBox[{"Abort", "[", 
+                          "]"}]}]}], "]"}], ";", "wlResiduals"}]], "Input", 
+               CellLabel -> " In[3]:=", ExpressionUUID -> 
+                "3c3cd605-95d3-4b39-ad3b-3fba6b5bf743"], Cell[OutputFormData[
+                "{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
+0}"], "Output", CellChangeTimes -> {4.0043731821285267*^9, 
+                 4.004373282005398*^9}, CellLabel -> "", ExpressionUUID -> 
+                "34c2e008-2273-4f55-9dcf-218d570a2226"]}, Open]]}, Open]], 
+        Cell[CellGroupData[{Cell["Python sources", "Section", 
+            ExpressionUUID -> "4095dc71-3c78-4162-9d6f-607f89d9ed48"], 
+           Cell[CellGroupData[{Cell["Numerical evaluation", "Subsection", 
+               ExpressionUUID -> "7dde4cb5-0964-4323-9076-4d8cb558f023"], 
+              Cell[BoxData[RowBox[{RowBox[{"numericTemplate", "=", 
+                    RowBox[{RowBox[{"StringRiffle", "[", RowBox[{RowBox[
+                          {"{", RowBox[{"\"\\\"\\\"\\\"Reproduce Table 1 and \
+the sampled bounds in equations (6), (16) and (17).\\\"\\\"\\\"\\nimport \
+argparse\\nimport csv\\nimport os\\nfrom decimal import Decimal\\nfrom \
+fractions import Fraction\\nfrom pathlib import Path\\nfrom tempfile import \
+NamedTemporaryFile\\n\\nfrom mpmath import mp\\n\\n# (q, x at the maximum, \
+printed q|R|), from Table 1.\\nTABLE = (\\n@@TABLE@@\\n)\\nGRID_X = \
+tuple(Decimal(j) / 20 for j in range(-20, 21))\\nMAIN = Fraction(43, \
+10)\\nSPLIT = Fraction(@@SPLIT@@)\\nGLOBAL = Fraction(@@GLOBAL@@)\\nAPPENDIX \
+= Fraction(@@APPENDIX@@)\\nFIELDS = (\\\"q\\\", \\\"x\\\", \
+\\\"working_dps\\\", \\\"Z_re\\\", \\\"Z_im\\\", \\\"F_re\\\", \\\"F_im\\\", \
+\\\"G_re\\\", \\\"G_im\\\",\\n          \\\"approx_re\\\", \\\"approx_im\\\", \
+\\\"R_re\\\", \\\"R_im\\\", \\\"abs_one_term\\\", \\\"abs_R\\\", \
+\\\"q_abs_R\\\",\\n          \\\"main_bound\\\", \\\"split_bound\\\", \
+\\\"global_bound\\\", \\\"appendix_bound\\\")\"", ",", "\"def \
+rational_value(fraction):\\n    return mp.mpf(fraction.numerator) / \
+fraction.denominator\"", ",", "\"def alternating_zeta(s, q):\\n    \
+\\\"\\\"\\\"Equation (2), with the paired series at its removable \
+pole.\\\"\\\"\\\"\\n    if q <= 0 or mp.re(s) <= 0:\\n        raise \
+ValueError(\\\"Equation (2) requires q > 0 and Re(s) > 0.\\\")\\n    if s == \
+1:\\n        return mp.nsum(lambda k: 1 / ((2*k + q) * (2*k + q + 1)), [0, \
+mp.inf])\\n    return (mp.zeta(s, q / mp.mpf(2)) - mp.zeta(s, (q + 1) / \
+mp.mpf(2))) / mp.power(2, s)\"", ",", "\"def normalized_z(q, x):\\n    t = \
+@@HEIGHT@@\\n    s = mp.mpf(\\\"0.5\\\") + mp.j*t\\n    return \
+mp.exp(mp.j*t*mp.log(q)) * alternating_zeta(s, q)\"", ",", "\"def \
+profile(x):\\n    angle = mp.exp(-mp.j*mp.pi/4)\\n    phase = \
+mp.exp(-mp.j*x*x/(2*mp.pi))\\n    return (1 + mp.j)/2 * phase * \
+mp.erfc(-angle*x/mp.sqrt(2*mp.pi))\"", ",", "\"def correction(x, f):\\n    \
+return mp.mpf(\\\"0.5\\\") + mp.j/(6*mp.pi) - x*x*(1 - \
+mp.j*x*f)/(6*mp.pi**2)\"", ",", "\"def evaluate(q_text, x_text, digits):\\n   \
+ with mp.workdps(digits):\\n        q, x = mp.mpf(q_text), \
+mp.mpf(str(x_text))\\n        z = normalized_z(q, x)\\n        f = \
+profile(x)\\n        g = correction(x, f)\\n        approximation = \
+@@TWO_TERMS@@\\n        residual = z - approximation\\n        absolute = \
+abs(residual)\\n        scaled = q*absolute\\n        bounds = \
+tuple(rational_value(c)/q for c in (MAIN, SPLIT, GLOBAL, APPENDIX))\\n        \
+if not all(mp.isfinite(v) and absolute < v for v in bounds):\\n            \
+raise ArithmeticError(f\\\"Sampled bound failed at q={q_text}, \
+x={x_text}.\\\")\\n        values = (z.real, z.imag, f.real, f.imag, g.real, \
+g.imag,\\n                  approximation.real, approximation.imag, \
+residual.real, residual.imag,\\n                  abs(z-f), absolute, scaled, \
+*bounds)\\n        return (q_text, str(x_text), digits, *(mp.nstr(v, digits) \
+for v in values)), scaled\"", ",", "\"def manuscript_grid():\\n    rows = \
+[]\\n    print(\\\"q         x     q|R| at the maximizing point (75 working \
+digits)\\\")\\n    for q, expected_x, printed in TABLE:\\n        samples = \
+[evaluate(q, x, 55) for x in GRID_X]\\n        rows.extend(row for row, _ in \
+samples)\\n        best, peak55 = max(samples, key=lambda sample: \
+sample[1])\\n        x_peak = best[1]\\n        repeat, peak75 = evaluate(q, \
+x_peak, 75)\\n        rows.append(repeat)\\n        with mp.workdps(75):\\n   \
+         if Decimal(x_peak) != Decimal(expected_x) or abs(peak75 - \
+mp.mpf(printed)) > mp.mpf(\\\"5e-13\\\"):\\n                raise \
+ArithmeticError(f\\\"Table 1 mismatch for q={q}.\\\")\\n            if \
+abs(peak55 - peak75) >= mp.mpf(\\\"1e-44\\\"):\\n                raise \
+ArithmeticError(f\\\"55/75-digit comparison failed for q={q}.\\\")\\n         \
+   print(f\\\"{q:<9} {x_peak:<5} {mp.nstr(peak75, 61)}\\\")\\n    return \
+rows\"", ",", "\"def abel_plana_check():\\n    \\\"\\\"\\\"Normalized \
+equation (7), integrated on the positive real axis at q=100.\\\"\\\"\\\"\\n   \
+ for x in (-1, 0, 1):\\n        with mp.workdps(60):\\n            q = \
+mp.mpf(100)\\n            root = mp.sqrt(q)\\n            s = \
+mp.mpf(\\\"0.5\\\") + mp.j*(mp.pi*q + x*root)\\n\\n            def \
+integrand(y):\\n                if y == 0:\\n                    return \
+-mp.j*s/(mp.pi*q)\\n                plus = -s*mp.log1p(mp.j*y/q)\\n           \
+     minus = -s*mp.log1p(-mp.j*y/q)\\n                return \
+mp.exp(plus-mp.pi*y)*mp.expm1(minus-plus)/mp.expm1(-2*mp.pi*y)\\n\\n          \
+  integral = (mp.mpf(\\\"0.5\\\") + mp.j*mp.quad(integrand, [0, 1, root, \
+4*root, mp.inf])) / root\\n        with mp.workdps(70):\\n            \
+difference = abs(integral - normalized_z(q, x))\\n            \
+print(f\\\"Abel-Plana, x={x}: absolute difference {mp.nstr(difference, \
+8)}\\\")\\n            if not difference < mp.mpf(\\\"1e-35\\\"):\\n          \
+      raise ArithmeticError(f\\\"Equation (7) comparison failed at \
+x={x}.\\\")\"", ",", "\"def main():\\n    parser = \
+argparse.ArgumentParser(description=__doc__)\\n    \
+parser.add_argument(\\\"--output\\\", type=Path,\\n                        \
+default=Path(__file__).resolve().with_name(\\\"Hurwitz_Numerical_Results.csv\
+\\\"))\\n    parser.add_argument(\\\"--abel-plana\\\", \
+action=\\\"store_true\\\", help=\\\"Also integrate equation (7).\\\")\\n    \
+args = parser.parse_args()\\n    rows = manuscript_grid()\\n    if \
+args.abel_plana:\\n        abel_plana_check()\\n    with \
+NamedTemporaryFile(mode=\\\"w\\\", encoding=\\\"utf-8\\\", newline=\\\"\\\", \
+dir=args.output.parent,\\n                            delete=False) as \
+stream:\\n        temporary = Path(stream.name)\\n        try:\\n            \
+writer = csv.writer(stream)\\n            writer.writerow(FIELDS)\\n          \
+  writer.writerows(rows)\\n            stream.close()\\n            \
+os.replace(temporary, args.output)\\n        finally:\\n            \
+temporary.unlink(missing_ok=True)\\n    print(f\\\"{len(rows)} evaluations \
+saved to {args.output}\\\")\"", ",", 
+                          "\"if __name__ == \\\"__main__\\\":\\n    main()\""}\
+], "}"}], ",", "\"\\n\\n\\n\""}], "]"}], "<>", "\"\\n\""}]}], ";"}]], 
+               "Input", CellLabel -> " In[4]:=", ExpressionUUID -> 
+                "6d5796d8-31fa-4958-864b-f52539be9f9c"]}, Open]], 
+           Cell[CellGroupData[{Cell["Symbolic identities", "Subsection", 
+               ExpressionUUID -> "4eee1fe1-379e-4701-9bc2-fe9d0da15416"], 
+              Cell[BoxData[RowBox[{RowBox[{"symbolicSource", "=", RowBox[
+                     {RowBox[{"StringRiffle", "[", RowBox[{RowBox[{"{", 
+                          RowBox[{"\"\\\"\\\"\\\"Algebraic checks for \
+equations (4), (5), (7)--(9), (12) and (14).\\\"\\\"\\\"\\nimport sympy as \
+sp\"", ",", "\"def residuals():\\n    i, pi = sp.I, sp.pi\\n    x, y, h, r, u \
+= sp.symbols(\\\"x y h r u\\\", real=True)\\n    z, f = sp.symbols(\\\"z \
+f\\\")\\n    a, w, v = sp.symbols(\\\"a w v\\\", nonzero=True)\\n    b = \
+sp.symbols(\\\"b\\\", positive=True)\\n    half = sp.Rational(1, 2)\\n\\n    \
+yield \\\"Abel-Plana, logistic weight\\\", (1 + \
+sp.tanh(b/2)).rewrite(sp.exp)/2 - 1/(1+sp.exp(-b))\\n    kernel = (a*w - \
+v)/(1-a)\\n    yield \\\"(8)-(9), splitting, a=exp(-2*pi*y)\\\", (w-v)/(1-a) \
+- w - kernel\\n    yield \\\"(8), exponential form, exp(D)=v/(a*w)\\\", \
+kernel - w*(1-v/(a*w))/(1/a-1)\\n\\n    theta = sp.atan(y*h**2)\\n    height \
+= pi/h**2 + x/h\\n    phase_difference = 2*pi*y - 2*height*theta + i*theta\\n \
+   yield \\\"(8), continuous value at zero\\\", -sp.diff(phase_difference, \
+y).subs(y, 0)/(2*pi) - x*h/pi + i*h**2/(2*pi)\\n    power_difference = \
+(1+i*y*h**2)**(-half-i*height) - (1-i*y*h**2)**(-half-i*height)\\n    yield \
+\\\"(7), quotient at the origin\\\", sp.diff(power_difference, y).subs(y, \
+0)/(2*pi) + i*(half+i*height)*h**2/pi\\n\\n    psi = -pi*z/h - \
+(half+i*height)*sp.log(1+i*h*z)\\n    phi = x*z - i*pi*z**2/2\\n    p = \
+-i*z/2 - i*x*z**2/2 - pi*z**3/3\\n    taylor = sp.series(psi, h, 0, \
+2).removeO().expand()\\n    yield \\\"Lemma 5.1, constant phase \
+coefficient\\\", taylor.coeff(h, 0) - phi\\n    yield \\\"Lemma 5.1, linear \
+phase coefficient\\\", taylor.coeff(h, 1) - p\\n\\n    angle = \
+sp.atan(r/(sp.sqrt(2)+r))\\n    delta = r/sp.sqrt(2) - angle\\n    \
+denominator = 1 + sp.sqrt(2)*r + r**2\\n    yield \\\"Lemma 5.2, derivative \
+of the rotated angle\\\", sp.diff(angle, r) - 1/(sp.sqrt(2)*denominator)\\n   \
+ yield \\\"Lemma 5.2, delta prime divided by r\\\", sp.diff(delta, r)/r - \
+(1+r/sp.sqrt(2))/denominator\\n    yield \\\"Lemma 5.2, derivative of delta \
+prime divided by r\\\", sp.diff(sp.diff(delta, r)/r, r) + \
+(1/sp.sqrt(2)+2*r+r**2/sp.sqrt(2))/denominator**2\\n\\n    profile = (1+i)/2 \
+* sp.exp(-i*x**2/(2*pi)) * sp.erfc(-(1-i)*x/(2*sp.sqrt(pi)))\\n    yield \
+\\\"(4), F(0)\\\", profile.subs(x, 0) - (1+i)/2\\n    yield \\\"(4), \
+differential identity\\\", pi*sp.diff(profile, x) - 1 + i*x*profile\\n    f1 \
+= (1-i*x*f)/pi\\n\\n    def differentiate(expr):\\n        return \
+sp.diff(expr, x) + f1*sp.diff(expr, f)\\n\\n    f2 = differentiate(f1)\\n    \
+f3 = differentiate(f2)\\n    yield \\\"Second derivative of F\\\", pi*f2 + \
+i*f + i*x*f1\\n    yield \\\"Third derivative of F\\\", pi*f3 + 2*i*f1 + \
+i*x*f2\\n    j1 = -i*f1/2 - i*x*f2/2 - pi*f3/3\\n    yield \\\"(5), \
+integration by parts\\\", j1 - i*(f1-x*f2)/6\\n    yield \\\"(5), G minus its \
+Gaussian-moment expression\\\", half+i/(6*pi)-x**2*(1-i*x*f)/(6*pi**2) - \
+(half+j1)\\n\\n    upper_pi = sp.Rational(22, 7)\\n    majorant = (u/2 + \
+u**2/2 + upper_pi*u**3/3)**2 + u**2/2 + 2*u**3/3 + upper_pi*u**4/2\\n    \
+printed = 3*u**2/4 + 7*u**3/6 + 241*u**4/84 + 22*u**5/21 + 484*u**6/441\\n    \
+yield \\\"(14), majorant polynomial\\\", majorant - printed\\n\\n    for j, \
+full, odd in ((1, sp.Rational(1,24), sp.Rational(1,8)),\\n                    \
+     (3, sp.Rational(1,240), sp.Rational(1,16))):\\n        standard = \
+sp.factorial(j)*sp.zeta(j+1)/(2*pi)**(j+1)\\n        odd_moment = \
+sp.factorial(j)*(1-sp.Integer(2)**(-j-1))*sp.zeta(j+1)/pi**(j+1)\\n        \
+yield f\\\"Lemma 4.1, moment {j}\\\", standard - full\\n        yield \
+f\\\"Lemma 4.2, odd-mode moment {j}\\\", odd_moment - odd\"", ",", "\"def \
+main():\\n    total = failed = 0\\n    for name, expression in \
+residuals():\\n        total += 1\\n        try:\\n            difference = \
+sp.simplify(expression)\\n        except (ValueError, TypeError, \
+NotImplementedError) as error:\\n            print(f\\\"UNRESOLVED  {name}: \
+{error}\\\")\\n            failed += 1\\n            continue\\n        if \
+difference == 0:\\n            print(f\\\"{name}: 0\\\")\\n        else:\\n   \
+         print(f\\\"UNCONFIRMED  {name}: {difference}\\\")\\n            \
+failed += 1\\n    print(f\\\"{total-failed}/{total} symbolic residuals \
+reduced to zero.\\\")\\n    return int(failed != 0)\"", ",", 
+                          "\"if __name__ == \\\"__main__\\\":\\n    raise \
+SystemExit(main())\""}], "}"}], ",", "\"\\n\\n\\n\""}], "]"}], "<>", 
+                      "\"\\n\""}]}], ";"}]], "Input", CellLabel -> 
+                " In[5]:=", ExpressionUUID -> 
+                "87091b59-076d-42da-ba64-1fd64feb8c11"]}, Open]], 
+           Cell[CellGroupData[{Cell["Exact rational arithmetic", 
+               "Subsection", ExpressionUUID -> 
+                "116a3ca2-8d6d-46a0-a536-65bc2a7f540e"], Cell[BoxData[
+                RowBox[{RowBox[{"exactSource", "=", RowBox[{RowBox[
+                       {"StringRiffle", "[", RowBox[{RowBox[{"{", RowBox[
+                          {"\"\\\"\\\"\\\"Exact rational checks for Lemmas \
+4.1--5.2, equations (14)--(17) and Appendix 1.\\\"\\\"\\\"\\nfrom fractions \
+import Fraction as Q\\nfrom math import factorial\"", ",", "\"def \
+equal(label, observed, expected):\\n    if observed != expected:\\n        \
+raise ArithmeticError(f\\\"{label}: obtained {observed}, expected \
+{expected}\\\")\\n    print(f\\\"{label} = {observed}\\\")\"", ",", "\"def \
+positive(label, margin):\\n    if margin <= 0:\\n        raise \
+ArithmeticError(f\\\"{label}: nonpositive margin {margin}\\\")\\n    \
+print(f\\\"{label}: margin {margin}\\\")\"", ",", "\"def exp_bracket(z, \
+degree):\\n    lower = sum(z**k/factorial(k) for k in range(degree+1))\\n    \
+upper = lower + z**(degree+1)/factorial(degree+1)/(1-z/(degree+2))\\n    \
+return lower, upper\"", ",", "\"def transition_margins(label, d):\\n    r0, \
+root_lower = Q(3,10), Q(140,99)\\n    positive(label + \\\" Gaussian\\\", \
+Q(157,50)*d/r0**2 - Q(9,8) - Q(5,22))\\n    positive(label + \\\" \
+exponential\\\", 10*Q(157,50)*d/r0 - 1/root_lower - Q(67,20))\"", ",", "\"def \
+transition_checks():\\n    r0, lower, upper = Q(3,10), Q(140,99), Q(99,70)\\n \
+   positive(\\\"sqrt(2), lower square\\\", 2-lower**2)\\n    \
+positive(\\\"sqrt(2), upper square\\\", upper**2-2)\\n    v = \
+r0/(lower+r0)\\n    transition_margins(\\\"Arctangent\\\", r0/upper - v + \
+v**3/3 - v**5/5)\\n    lower, upper = Q(1414213,10**6), Q(1414214,10**6)\\n   \
+ positive(\\\"Appendix lower square\\\", 2-lower**2)\\n    \
+positive(\\\"Appendix upper square\\\", upper**2-2)\\n    step = r0/4096\\n   \
+ total = 0\\n    for j in range(4096):\\n        r = j*step\\n        b = \
+lower*r+r*r\\n        total += (10**12*b) // (upper*(1+b))\\n    d = \
+step*total/10**12\\n    equal(\\\"Appendix lower sum\\\", d, \
+Q(1592131749274149,40960000000000000))\\n    transition_margins(\\\"Lower \
+sum\\\", d)\"", ",", "\"def main():\\n    pi_upper, a, kappa = Q(22,7), \
+Q(9,8), Q(67,20)\\n    h = Q(1,10)\\n    transition_checks()\\n    \
+equal(\\\"Completed-square constant\\\", Q(1,2)/(4*Q(5,22)), Q(11,20))\\n    \
+positive(\\\"exp(11/20) < 7/4\\\", Q(7,4)-exp_bracket(Q(11,20), 6)[1])\\n    \
+cutoff = Q(461,100)\\n    positive(\\\"exp(4.61) > 100\\\", \
+exp_bracket(cutoff, 16)[0]-100)\\n    positive(\\\"exp(0.461) < 5/3\\\", \
+Q(5,3)-exp_bracket(cutoff*h, 6)[1])\\n    positive(\\\"Local multiplier < \
+3\\\", 3-Q(5,3)*(exp_bracket(Q(1), 6)[1]-1))\\n    phase_bound = \
+(2*h+h*h)*cutoff + 2*pi_upper*cutoff**3*h**4/3\\n    equal(\\\"Short-interval \
+phase\\\", phase_bound, Q(51902943991,52500000000))\\n    positive(\\\"Phase \
+< 0.989\\\", Q(989,1000)-phase_bound)\\n    pi_lower = Q(157,50)\\n    \
+positive(\\\"Tail prefactor 3/pi < 1\\\", 1-3/pi_lower)\\n    \
+positive(\\\"Tail exponent below -5/2\\\", pi_lower-3)\\n    equal(\\\"Tail \
+comparison at q=100, squared\\\", Q(100)**(-5), Q(1,10**5)**2)\\n    \
+positive(\\\"Tail denominator exceeds 2/3\\\", Q(1,3)-Q(100)**(-6))\\n    \
+positive(\\\"2*pi-h > pi\\\", pi_lower-h)\\n\\n    # Appendix 1 \
+counterexample: A=100*pi*(1-pi/4), |D| <= 2*A+pi/4.\\n    \
+positive(\\\"Counterexample A > 64\\\", 100*pi_lower*(1-pi_upper/4)-64)\\n    \
+positive(\\\"Counterexample 5|D| < 3150\\\", \
+3150-5*(200*pi_upper+pi_upper/4))\\n    positive(\\\"Counterexample numerator \
+> 3150\\\", (Q(64)**3/6-1)/2-3150)\\n\\n    # Square the first derivative \
+bound and add the second derivative bound.\\n    first = (Q(0), Q(1,2), \
+Q(1,2), pi_upper/3)\\n    p = [Q(0), Q(0), Q(1,2), Q(2,3), pi_upper/2, Q(0), \
+Q(0)]\\n    for i, left in enumerate(first):\\n        for j, right in \
+enumerate(first):\\n            p[i+j] += left*right\\n    equal(\\\"P_b \
+coefficients (degrees 2--6)\\\", tuple(p[2:]),\\n          (Q(3,4), Q(7,6), \
+Q(241,84), Q(22,21), Q(484,441)))\\n\\n    positive(\\\"Squared g0 bound\\\", \
+Q(67,80)**2-pi_upper/(4*a))\\n    gaussian = [Q(67,80), 1/(2*a)]  # Even \
+entries propagate the bound on g0.\\n    for j in range(2, 7):\\n        \
+gaussian.append((j-1)*gaussian[j-2]/(2*a))\\n    exponential = \
+[Q(factorial(j))/kappa**(j+1) for j in range(7)]\\n    for j in \
+range(2,7):\\n        print(f\\\"j={j}: Gaussian bound {gaussian[j]}, \
+exponential moment {exponential[j]}\\\")\\n    jbar = \
+sum(p[j]*(Q(7,4)*gaussian[j]+exponential[j]) for j in range(2,7))\\n    \
+equal(\\\"Jbar\\\", jbar, \
+Q(533948559110614545113,69278297361197722560))\\n\\n    # The two full-kernel \
+moments are evaluated symbolically in the companion script.\\n    m1, m3 = \
+Q(1,24), Q(1,240)\\n    odd1, odd3 = 3*m1, 15*m3\\n    equal(\\\"Odd-mode \
+moments\\\", (odd1,odd3), (Q(1,8),Q(1,16)))\\n    local = (2+h)*m1 + \
+2*pi_upper*h**3*m3/3\\n    tail = Q(1,10**5)\\n    split, b3 = 5*local+tail, \
+3*local+tail\\n    whole = (2+h)*odd1 + 2*pi_upper*h**3*odd3/3\\n    \
+equal(\\\"B_s\\\", split, Q(689147,1575000))\\n    equal(\\\"B_g\\\", whole, \
+Q(22061,84000))\\n    equal(\\\"B_3\\\", b3, \
+Q(3,12)+Q(3,240)+Q(22,7*120000)+tail)\\n    main_sum, whole_sum, appendix_sum \
+= (jbar/2+b for b in (split,whole,b3))\\n    equal(\\\"Equation (16)\\\", \
+main_sum, Q(371609064358084350147257,86597871701497153200000))\\n    \
+equal(\\\"Equation (17)\\\", whole_sum, \
+Q(14258445238530472531037,3463914868059886128000))\\n    equal(\\\"Appendix \
+1\\\", appendix_sum, Q(356452924783991052355217,86597871701497153200000))\\n  \
+  positive(\\\"43/10 minus (16)\\\", Q(43,10)-main_sum)\\n    \
+positive(\\\"4117/1000 minus (17)\\\", Q(4117,1000)-whole_sum)\\n    \
+positive(\\\"4117/1000 minus Appendix 1\\\", Q(4117,1000)-appendix_sum)\"", 
+                          ",", 
+                          "\"if __name__ == \\\"__main__\\\":\\n    main()\""}\
+], "}"}], ",", "\"\\n\\n\\n\""}], "]"}], "<>", "\"\\n\""}]}], ";"}]], 
+               "Input", CellLabel -> " In[6]:=", ExpressionUUID -> 
+                "bf184b1b-d439-4848-856f-0c807389346c"]}, Open]]}, Open]], 
+        Cell[CellGroupData[{Cell["Export to the notebook directory", 
+            "Section", ExpressionUUID -> 
+             "bd43dec2-c61e-42f2-900b-a620d0bff403"], 
+           Cell[CellGroupData[{Cell[BoxData[RowBox[{RowBox[{RowBox[
+                     {"asFraction", "[", "n_", "]"}], ":=", RowBox[
+                     {RowBox[{"ToString", "[", RowBox[{RowBox[{"Numerator", 
+                          "[", "n", "]"}], ",", "InputForm"}], "]"}], "<>", 
+                      "\", \"", "<>", RowBox[{"ToString", "[", RowBox[
+                         {RowBox[{"Denominator", "[", "n", "]"}], ",", 
+                          "InputForm"}], "]"}]}]}], ";", RowBox[
+                   {"pythonTable", "=", RowBox[{"StringRiffle", "[", 
+                      RowBox[{RowBox[{RowBox[{"(", RowBox[{RowBox[
+                          {"\"    (\"", "<>", RowBox[{"StringRiffle", "[", 
+                          RowBox[{RowBox[{RowBox[{"(", RowBox[{RowBox[
+                          {"\"\\\"\"", "<>", "#1", "<>", "\"\\\"\""}], "&"}], 
+                          ")"}], "/@", "#1"}], ",", "\", \""}], "]"}], "<>", 
+                          "\"),\""}], "&"}], ")"}], "/@", "tableOne"}], ",", 
+                        "\"\\n\""}], "]"}]}], ";", RowBox[{RowBox[
+                     {"pyArithmetic", "[", "\[Pi]", "]"}], "=", 
+                    "\"mp.pi\""}], ";", RowBox[{RowBox[{"pyArithmetic", "[", 
+                      "var_Symbol", "]"}], ":=", RowBox[{"SymbolName", "[", 
+                      "var", "]"}]}], ";", RowBox[{RowBox[{"pyArithmetic", 
+                      "[", SuperscriptBox["rad_", RowBox[{"Rational", "[", 
+                         RowBox[{"1", ",", "2"}], "]"}]], "]"}], ":=", 
+                    RowBox[{"\"mp.sqrt(\"", "<>", RowBox[{"pyArithmetic", 
+                        "[", "rad", "]"}], "<>", "\")\""}]}], ";", 
+                  RowBox[{RowBox[{"pyArithmetic", "[", RowBox[{"n_", " ", 
+                        SuperscriptBox["d_", RowBox[{"Rational", "[", RowBox[
+                          {RowBox[{"-", "1"}], ",", "2"}], "]"}]]}], "]"}], 
+                    ":=", RowBox[{RowBox[{"pyArithmetic", "[", "n", "]"}], 
+                      "<>", "\" / mp.sqrt(\"", "<>", RowBox[{"pyArithmetic", 
+                        "[", "d", "]"}], "<>", "\")\""}]}], ";", 
+                  RowBox[{RowBox[{"pyArithmetic", "[", "v_Plus", "]"}], ":=", 
+                    RowBox[{"StringRiffle", "[", RowBox[{RowBox[
+                         {"pyArithmetic", "/@", RowBox[{"List", "@@", 
+                          "v"}]}], ",", "\" + \""}], "]"}]}], ";", 
+                  RowBox[{RowBox[{"pyArithmetic", "[", "v_Times", "]"}], 
+                    ":=", RowBox[{"StringRiffle", "[", RowBox[{RowBox[
+                         {"pyArithmetic", "/@", RowBox[{"List", "@@", 
+                          "v"}]}], ",", "\" * \""}], "]"}]}], ";", 
+                  RowBox[{"numericCode", "=", RowBox[{"StringReplace", "[", 
+                      RowBox[{"numericTemplate", ",", RowBox[{"{", RowBox[
+                          {RowBox[{"\"@@TABLE@@\"", "\[Rule]", 
+                          "pythonTable"}], ",", RowBox[{"\"@@SPLIT@@\"", 
+                          "\[Rule]", RowBox[{"asFraction", "[", "cSplit", 
+                          "]"}]}], ",", RowBox[{"\"@@GLOBAL@@\"", "\[Rule]", 
+                          RowBox[{"asFraction", "[", "cGlobal", "]"}]}], ",", 
+                          RowBox[{"\"@@APPENDIX@@\"", "\[Rule]", RowBox[
+                          {"asFraction", "[", "cAppendix", "]"}]}], ",", 
+                          RowBox[{"\"@@HEIGHT@@\"", "\[Rule]", RowBox[
+                          {"pyArithmetic", "[", RowBox[{"height", "[", RowBox[
+                          {"q", ",", "x"}], "]"}], "]"}]}], ",", RowBox[
+                          {"\"@@TWO_TERMS@@\"", "\[Rule]", RowBox[
+                          {"pyArithmetic", "[", RowBox[{"twoTerms", "[", 
+                          RowBox[{"q", ",", "f", ",", "g"}], "]"}], 
+                          "]"}]}]}], "}"}]}], "]"}]}], ";", RowBox[
+                   {"exportSources", "=", RowBox[{"Association", "[", 
+                      RowBox[{RowBox[{"\"numerical_checks.py\"", "\[Rule]", 
+                          "numericCode"}], ",", RowBox[
+                         {"\"identity_checks.py\"", "\[Rule]", 
+                          "symbolicSource"}], ",", RowBox[
+                         {"\"exact_arithmetic.py\"", "\[Rule]", 
+                          "exactSource"}]}], "]"}]}], ";", RowBox[
+                   {RowBox[{"writeSource", "[", RowBox[{"name_", ",", 
+                        "src_"}], "]"}], ":=", RowBox[{"Module", "[", 
+                      RowBox[{RowBox[{"{", RowBox[{"tem", ",", RowBox[
+                          {"target", "=", RowBox[{"FileNameJoin", "[", RowBox[
+                          {"{", RowBox[{"base", ",", "name"}], "}"}], 
+                          "]"}]}]}], "}"}], ",", RowBox[{RowBox[{"tem", "=", 
+                          RowBox[{"FileNameJoin", "[", RowBox[{"{", RowBox[
+                          {"base", ",", RowBox[{"\".\"", "<>", RowBox[
+                          {"CreateUUID", "[", "]"}], "<>", "\".tmp\""}]}], 
+                          "}"}], "]"}]}], ";", RowBox[{"If", "[", RowBox[
+                          {RowBox[{RowBox[{"Export", "[", RowBox[{"tem", ",", 
+                          "src", ",", "\"Text\"", ",", RowBox[
+                          {"CharacterEncoding", "\[Rule]", "\"UTF-8\""}]}], 
+                          "]"}], "===", "$Failed"}], ",", RowBox[{"Abort", 
+                          "[", "]"}]}], "]"}], ";", RowBox[{"If", "[", 
+                          RowBox[{RowBox[{RowBox[{"RenameFile", "[", RowBox[
+                          {"tem", ",", "target", ",", RowBox[
+                          {"OverwriteTarget", "\[Rule]", "True"}]}], "]"}], 
+                          "===", "$Failed"}], ",", RowBox[{"Abort", "[", 
+                          "]"}]}], "]"}], ";", "name"}]}], "]"}]}], ";", 
+                  RowBox[{"KeyValueMap", "[", RowBox[{"writeSource", ",", 
+                      "exportSources"}], "]"}]}]], "Input", CellLabel -> 
+                " In[7]:=", ExpressionUUID -> 
+                "f035d360-ade5-48a6-991d-466d4ed27fba"], Cell[OutputFormData[
+                "{numerical_checks.py, identity_checks.py, \
+exact_arithmetic.py}"], "Output", CellChangeTimes -> {4.004373182155826*^9, 
+                 4.0043732821138477*^9}, CellLabel -> "", ExpressionUUID -> 
+                "a824d849-878d-45a5-a6b1-67163a23e612"]}, Open]]}, Open]], 
+        Cell[CellGroupData[{Cell["Independent Wolfram calculations", 
+            "Section", ExpressionUUID -> 
+             "27f27786-dbbe-4a6d-90d8-a709cb90e0da"], 
+           Cell[CellGroupData[{Cell[BoxData[RowBox[{RowBox[{RowBox[
+                     {"referenceRow", "[", RowBox[{"q_", ",", "x_", ",", 
+                        "p_Integer"}], "]"}], ":=", RowBox[{"Module", "[", 
+                      RowBox[{RowBox[{"{", RowBox[{"z", ",", "f", ",", "g", 
+                          ",", "approx", ",", "r"}], "}"}], ",", RowBox[
+                         {RowBox[{"z", "=", RowBox[{"zValue", "[", RowBox[
+                          {"q", ",", "x", ",", "p"}], "]"}]}], ";", RowBox[
+                          {"f", "=", RowBox[{"N", "[", RowBox[{RowBox[
+                          {"profile", "[", "x", "]"}], ",", "p"}], "]"}]}], 
+                          ";", RowBox[{"g", "=", RowBox[{"N", "[", RowBox[
+                          {RowBox[{"correction", "[", RowBox[{"x", ",", 
+                          "f"}], "]"}], ",", "p"}], "]"}]}], ";", RowBox[
+                          {"approx", "=", RowBox[{"twoTerms", "[", RowBox[
+                          {"q", ",", "f", ",", "g"}], "]"}]}], ";", RowBox[
+                          {"r", "=", RowBox[{"z", "-", "approx"}]}], ";", 
+                          RowBox[{"{", RowBox[{"q", ",", "x", ",", "p", ",", 
+                          RowBox[{"Re", "[", "z", "]"}], ",", RowBox[{"Im", 
+                          "[", "z", "]"}], ",", RowBox[{"Re", "[", "f", 
+                          "]"}], ",", RowBox[{"Im", "[", "f", "]"}], ",", 
+                          RowBox[{"Re", "[", "g", "]"}], ",", RowBox[{"Im", 
+                          "[", "g", "]"}], ",", RowBox[{"Re", "[", "approx", 
+                          "]"}], ",", RowBox[{"Im", "[", "approx", "]"}], 
+                          ",", RowBox[{"Re", "[", "r", "]"}], ",", RowBox[
+                          {"Im", "[", "r", "]"}], ",", RowBox[{"Abs", "[", 
+                          RowBox[{"z", "-", "f"}], "]"}], ",", RowBox[{"Abs", 
+                          "[", "r", "]"}], ",", RowBox[{"q", " ", RowBox[
+                          {"Abs", "[", "r", "]"}]}], ",", FractionBox["43", 
+                          RowBox[{"10", " ", "q"}]], ",", FractionBox[
+                          "cSplit", "q"], ",", FractionBox["cGlobal", "q"], 
+                          ",", FractionBox["cAppendix", "q"]}], "}"}]}]}], 
+                      "]"}]}], ";", RowBox[{"blocks", "=", RowBox[{"Table", 
+                      "[", RowBox[{RowBox[{"referenceRow", "[", RowBox[
+                          {"q", ",", "x", ",", "55"}], "]"}], ",", RowBox[
+                         {"{", RowBox[{"q", ",", "qGrid"}], "}"}], ",", 
+                        RowBox[{"{", RowBox[{"x", ",", "xGrid"}], "}"}]}], 
+                      "]"}]}], ";", RowBox[{"peaks", "=", RowBox[
+                     {RowBox[{"(", RowBox[{RowBox[{"First", "[", RowBox[
+                          {"MaximalBy", "[", RowBox[{"#1", ",", RowBox[
+                          {"Function", "[", RowBox[{"row", ",", RowBox[
+                          {"row", "\[LeftDoubleBracket]", "16", 
+                          "\[RightDoubleBracket]"}]}], "]"}]}], "]"}], "]"}], 
+                          "&"}], ")"}], "/@", "blocks"}]}], ";", 
+                  RowBox[{"repeated", "=", RowBox[{RowBox[{"(", RowBox[
+                         {RowBox[{"referenceRow", "[", RowBox[{RowBox[{"#1", 
+                          "\[LeftDoubleBracket]", "1", 
+                          "\[RightDoubleBracket]"}], ",", RowBox[{"#1", 
+                          "\[LeftDoubleBracket]", "2", 
+                          "\[RightDoubleBracket]"}], ",", "75"}], "]"}], 
+                          "&"}], ")"}], "/@", "peaks"}]}], ";", RowBox[
+                   {"reference", "=", RowBox[{"Join", "[", RowBox[
+                       {RowBox[{"Join", "@@", "blocks"}], ",", "repeated"}], 
+                      "]"}]}], ";", RowBox[{RowBox[{"gap", "[", RowBox[
+                       {"a_", ",", "b_"}], "]"}], ":=", RowBox[{"Abs", "[", 
+                      RowBox[{RowBox[{"SetPrecision", "[", RowBox[{"a", ",", 
+                          "\[Infinity]"}], "]"}], "-", RowBox[
+                         {"SetPrecision", "[", RowBox[{"b", ",", 
+                          "\[Infinity]"}], "]"}]}], "]"}]}], ";", 
+                  RowBox[{"roundedDiff", "=", RowBox[{"MapThread", "[", 
+                      RowBox[{"gap", ",", RowBox[{"{", RowBox[{RowBox[
+                          {"repeated", "\[LeftDoubleBracket]", RowBox[{"All", 
+                          ",", "16"}], "\[RightDoubleBracket]"}], ",", 
+                          RowBox[{"parseDecimal", "/@", RowBox[{"tableOne", 
+                          "\[LeftDoubleBracket]", RowBox[{"All", ",", "3"}], 
+                          "\[RightDoubleBracket]"}]}]}], "}"}]}], "]"}]}], 
+                  ";", RowBox[{"precisionDiff", "=", RowBox[{"MapThread", 
+                      "[", RowBox[{"gap", ",", RowBox[{"{", RowBox[
+                          {RowBox[{"peaks", "\[LeftDoubleBracket]", RowBox[
+                          {"All", ",", "16"}], "\[RightDoubleBracket]"}], 
+                          ",", RowBox[{"repeated", "\[LeftDoubleBracket]", 
+                          RowBox[{"All", ",", "16"}], 
+                          "\[RightDoubleBracket]"}]}], "}"}]}], "]"}]}], ";", 
+                  RowBox[{"figureRows", "=", RowBox[{"Select", "[", 
+                      RowBox[{RowBox[{"Join", "@@", "blocks"}], ",", 
+                        RowBox[{RowBox[{"MemberQ", "[", RowBox[{RowBox[{"{", 
+                          RowBox[{"100", ",", "400", ",", "1600"}], "}"}], 
+                          ",", RowBox[{"First", "[", "#1", "]"}]}], "]"}], 
+                          "&"}]}], "]"}]}], ";", RowBox[{"figureRatio", "=", 
+                    RowBox[{RowBox[{"(", RowBox[{FractionBox[RowBox[{"#1", 
+                          "\[LeftDoubleBracket]", "14", 
+                          "\[RightDoubleBracket]"}], RowBox[{"#1", 
+                          "\[LeftDoubleBracket]", "15", 
+                          "\[RightDoubleBracket]"}]], "&"}], ")"}], "/@", 
+                      RowBox[{"First", "[", "blocks", "]"}]}]}], ";", 
+                  RowBox[{"If", "[", RowBox[{RowBox[{"!", RowBox[{"(", 
+                          RowBox[{RowBox[{RowBox[{"Dimensions", "[", 
+                          "reference", "]"}], "\[Equal]", RowBox[{"{", RowBox[
+                          {"294", ",", "20"}], "}"}]}], "&&", RowBox[
+                          {RowBox[{"Length", "[", RowBox[{"DeleteDuplicates", 
+                          "[", RowBox[{"reference", "\[LeftDoubleBracket]", 
+                          RowBox[{"All", ",", RowBox[{"1", ";;", "3"}]}], 
+                          "\[RightDoubleBracket]"}], "]"}], "]"}], 
+                          "\[Equal]", "294"}], "&&", RowBox[{RowBox[
+                          {"repeated", "\[LeftDoubleBracket]", RowBox[{"All", 
+                          ",", "2"}], "\[RightDoubleBracket]"}], "\[Equal]", 
+                          RowBox[{"parseDecimal", "/@", RowBox[{"tableOne", 
+                          "\[LeftDoubleBracket]", RowBox[{"All", ",", "2"}], 
+                          "\[RightDoubleBracket]"}]}]}], "&&", RowBox[
+                          {RowBox[{"Max", "[", "roundedDiff", "]"}], 
+                          "\[LessEqual]", FractionBox["5", SuperscriptBox[
+                          "10", "13"]]}], "&&", RowBox[{RowBox[{"Max", "[", 
+                          "precisionDiff", "]"}], "<", FractionBox["1", 
+                          SuperscriptBox["10", "44"]]}], "&&", RowBox[
+                          {"AllTrue", "[", RowBox[{"figureRows", ",", RowBox[
+                          {RowBox[{RowBox[{"#1", "\[LeftDoubleBracket]", 
+                          "15", "\[RightDoubleBracket]"}], "<", RowBox[{"#1", 
+                          "\[LeftDoubleBracket]", "14", 
+                          "\[RightDoubleBracket]"}]}], "&"}]}], "]"}], "&&", 
+                          RowBox[{"AllTrue", "[", RowBox[{"reference", ",", 
+                          RowBox[{"Function", "[", RowBox[{"row", ",", RowBox[
+                          {RowBox[{"row", "\[LeftDoubleBracket]", "15", 
+                          "\[RightDoubleBracket]"}], "<", RowBox[{"Min", "[", 
+                          RowBox[{"row", "\[LeftDoubleBracket]", RowBox[
+                          {"17", ";;", "20"}], "\[RightDoubleBracket]"}], 
+                          "]"}]}]}], "]"}]}], "]"}]}], ")"}]}], ",", 
+                      RowBox[{"Abort", "[", "]"}]}], "]"}], ";", 
+                  RowBox[{"Association", "[", RowBox[{RowBox[
+                       {"\"Rows by precision\"", "\[Rule]", RowBox[{"{", 
+                          RowBox[{RowBox[{"Length", "[", RowBox[{"Join", 
+                          "@@", "blocks"}], "]"}], ",", RowBox[{"Length", 
+                          "[", "repeated", "]"}]}], "}"}]}], ",", RowBox[
+                       {"\"Maxima {q,x,q|R|}\"", "\[Rule]", RowBox[
+                         {"repeated", "\[LeftDoubleBracket]", RowBox[{"All", 
+                          ",", RowBox[{"{", RowBox[{"1", ",", "2", ",", 
+                          "16"}], "}"}]}], "\[RightDoubleBracket]"}]}], ",", 
+                      RowBox[{"\"Figure 2 points improved\"", "\[Rule]", 
+                        RowBox[{"Length", "[", "figureRows", "]"}]}], ",", 
+                      RowBox[{"\"Ratio range at q=100\"", "\[Rule]", 
+                        RowBox[{"N", "[", RowBox[{RowBox[{"MinMax", "[", 
+                          "figureRatio", "]"}], ",", "9"}], "]"}]}]}], 
+                    "]"}]}]], "Input", CellLabel -> " In[8]:=", 
+               ExpressionUUID -> "d41fe97f-a67c-490a-863f-23f82e1966ef"], 
+              Cell[OutputFormData["<|Rows by precision -> {287, 7}, Maxima \
+{q,x,q|R|} -> {{100, -1, \
+0.083681979527711946562461945089004934242859423147598914984044380343869355746\
+609105973816201938071`67.18245736305654}, {100001/1000, -1, \
+0.083681976829402018562645564703139179435999113910194084540612385985815577633\
+45970473561156190704`68.60785940033948}, {201/2, -1, \
+0.083680636233391160883824116071051098376965337322895111012883273466253547080\
+076691832913555242114`68.60166179441181}, {101, -1, \
+0.083679304575669752749363513163902716106865179286065004230677166059742865167\
+479752788104002304722`67.14179542215683}, {150, -1, \
+0.083587445356630792145421375503374017052605921024113553351584949284902085504\
+090139908164395401586`66.80008514107594}, {400, -1, \
+0.083445093725217875246481609429973862128985965314096768326907340409886916578\
+34`65.76979179303153}, {1600, -1, \
+0.083350517492236012417817168318583778084355004810738941629433090046954835912\
+36`64.16541334988688}}, Figure 2 points improved -> 123, Ratio range at q=100 \
+-> {58.9413616959980476001`9., 471.0166045302825253347`9.}|>"], "Output", 
+               CellChangeTimes -> {4.004373183324548*^9, 
+                 4.004373283589595*^9}, CellLabel -> "", ExpressionUUID -> 
+                "379fa493-cfcb-4c8d-8414-0cc409fb5eb6"]}, Open]], 
+           Cell[CellGroupData[{Cell["Abel\[Dash]Plana comparison at q = 100", 
+               "Subsection", ExpressionUUID -> 
+                "542816f6-eb49-47ae-a626-2ec99cb7c6f3"], Cell[CellGroupData[
+                {Cell[BoxData[RowBox[{RowBox[{RowBox[{"abel", "[", RowBox[
+                          {"q_", ",", "x_"}], "]"}], ":=", RowBox[{"Module", 
+                         "[", RowBox[{RowBox[{"{", RowBox[{RowBox[{"t", "=", 
+                          RowBox[{"height", "[", RowBox[{"q", ",", "x"}], 
+                          "]"}]}], ",", "s", ",", "integrand"}], "}"}], ",", 
+                          RowBox[{RowBox[{"s", "=", RowBox[{FractionBox["1", 
+                          "2"], "+", RowBox[{"\[ImaginaryI]", " ", "t"}]}]}], 
+                          ";", RowBox[{RowBox[{"integrand", "[", RowBox[
+                          {"y_", "?", "NumericQ"}], "]"}], ":=", RowBox[
+                          {"If", "[", RowBox[{RowBox[{"TrueQ", "[", RowBox[
+                          {"y", "\[Equal]", "0"}], "]"}], ",", RowBox[{"-", 
+                          FractionBox[RowBox[{"\[ImaginaryI]", " ", "s"}], 
+                          RowBox[{"\[Pi]", " ", "q"}]]}], ",", FractionBox[
+                          RowBox[{SuperscriptBox[RowBox[{"(", RowBox[{"1", 
+                          "+", FractionBox[RowBox[{"\[ImaginaryI]", " ", 
+                          "y"}], "q"]}], ")"}], RowBox[{"-", "s"}]], "-", 
+                          SuperscriptBox[RowBox[{"(", RowBox[{"1", "-", 
+                          FractionBox[RowBox[{"\[ImaginaryI]", " ", "y"}], 
+                          "q"]}], ")"}], RowBox[{"-", "s"}]]}], RowBox[{"2", 
+                          " ", RowBox[{"Sinh", "[", RowBox[{"\[Pi]", " ", 
+                          "y"}], "]"}]}]]}], "]"}]}], ";", RowBox[
+                          {FractionBox["1", RowBox[{"2", " ", SqrtBox[
+                          "q"]}]], "+", RowBox[{FractionBox["1", SqrtBox[
+                          "q"]], RowBox[{"\[ImaginaryI]", " ", RowBox[
+                          {"NIntegrate", "[", RowBox[{RowBox[{"integrand", 
+                          "[", "y", "]"}], ",", RowBox[{"{", RowBox[{"y", 
+                          ",", "0", ",", "1", ",", SqrtBox["q"], ",", RowBox[
+                          {"4", " ", SqrtBox["q"]}], ",", "\[Infinity]"}], 
+                          "}"}], ",", RowBox[{"WorkingPrecision", "\[Rule]", 
+                          "60"}], ",", RowBox[{"AccuracyGoal", "\[Rule]", 
+                          "35"}], ",", RowBox[{"PrecisionGoal", "\[Rule]", 
+                          "35"}], ",", RowBox[{"MaxRecursion", "\[Rule]", 
+                          "30"}]}], "]"}]}]}]}]}]}], "]"}]}], ";", RowBox[
+                      {"apGaps", "=", RowBox[{"Table", "[", RowBox[
+                          {RowBox[{"gap", "[", RowBox[{RowBox[{"abel", "[", 
+                          RowBox[{"100", ",", "x"}], "]"}], ",", RowBox[
+                          {"zValue", "[", RowBox[{"100", ",", "x", ",", 
+                          "70"}], "]"}]}], "]"}], ",", RowBox[{"{", RowBox[
+                          {"x", ",", RowBox[{"{", RowBox[{RowBox[{"-", "1"}], 
+                          ",", "0", ",", "1"}], "}"}]}], "}"}]}], "]"}]}], 
+                     ";", RowBox[{"If", "[", RowBox[{RowBox[{"!", RowBox[
+                          {"TrueQ", "[", RowBox[{RowBox[{"Max", "[", 
+                          "apGaps", "]"}], "<", FractionBox["1", 
+                          SuperscriptBox["10", "35"]]}], "]"}]}], ",", 
+                         RowBox[{"Abort", "[", "]"}]}], "]"}], ";", 
+                     RowBox[{"N", "[", RowBox[{"apGaps", ",", "6"}], 
+                       "]"}]}]], "Input", CellLabel -> " In[9]:=", 
+                  ExpressionUUID -> "d885c324-a7a0-4eda-a2d2-5fd92142856f"], 
+                 Cell[OutputFormData["{7.53135547670143202`6.*^-58, \
+1.67152797403162842186451`6.*^-54, 1.186661324176718783666975`6.*^-53}"], 
+                  "Output", CellChangeTimes -> {4.004373183703092*^9, 
+                    4.0043732840528917*^9}, CellLabel -> "", 
+                  ExpressionUUID -> "b50ac1ae-c2c1-4e47-9b1f-eac290757f82"]}, 
+                Open]]}, Open]]}, Open]], Cell[CellGroupData[
+          {Cell["Comparison with the Python CSV", "Section", 
+            ExpressionUUID -> "ff64a8d5-b029-4b61-82aa-e73a73486347"], 
+           Cell[CellGroupData[{Cell[BoxData[RowBox[{RowBox[{"csvName", "=", 
+                    RowBox[{"FileNameJoin", "[", RowBox[{"{", RowBox[{"base", 
+                          ",", "\"Hurwitz_Numerical_Results.csv\""}], "}"}], 
+                      "]"}]}], ";", RowBox[{"If", "[", RowBox[
+                     {RowBox[{"!", RowBox[{"FileExistsQ", "[", "csvName", 
+                          "]"}]}], ",", "\"Run the numerical Python program, \
+then evaluate this comparison.\"", ",", RowBox[{"Module", "[", RowBox[
+                         {RowBox[{"{", RowBox[{"raw", ",", "header", ",", 
+                          "numbers", ",", "index", ",", "keys", ",", "pairs", 
+                          ",", "d55", ",", "d75"}], "}"}], ",", RowBox[
+                          {RowBox[{"raw", "=", RowBox[{"Import", "[", RowBox[
+                          {"csvName", ",", "\"CSV\"", ",", RowBox[
+                          {"\"Numeric\"", "\[Rule]", "False"}]}], "]"}]}], 
+                          ";", RowBox[{"header", "=", RowBox[{"{", RowBox[
+                          {"\"q\"", ",", "\"x\"", ",", "\"working_dps\"", 
+                          ",", "\"Z_re\"", ",", "\"Z_im\"", ",", "\"F_re\"", 
+                          ",", "\"F_im\"", ",", "\"G_re\"", ",", "\"G_im\"", 
+                          ",", "\"approx_re\"", ",", "\"approx_im\"", ",", 
+                          "\"R_re\"", ",", "\"R_im\"", ",", 
+                          "\"abs_one_term\"", ",", "\"abs_R\"", ",", 
+                          "\"q_abs_R\"", ",", "\"main_bound\"", ",", 
+                          "\"split_bound\"", ",", "\"global_bound\"", ",", 
+                          "\"appendix_bound\""}], "}"}]}], ";", RowBox[
+                          {"If", "[", RowBox[{RowBox[{RowBox[{RowBox[
+                          {"Dimensions", "[", "raw", "]"}], "=!=", RowBox[
+                          {"{", RowBox[{"295", ",", "20"}], "}"}]}], "||", 
+                          RowBox[{RowBox[{"First", "[", "raw", "]"}], "=!=", 
+                          "header"}]}], ",", RowBox[{RowBox[{"Print", "[", 
+                          "\"Unexpected CSV dimensions or column names.\"", 
+                          "]"}], ";", RowBox[{"Abort", "[", "]"}]}]}], "]"}], 
+                          ";", RowBox[{"numbers", "=", RowBox[{"Map", "[", 
+                          RowBox[{"parseDecimal", ",", RowBox[{"Rest", "[", 
+                          "raw", "]"}], ",", RowBox[{"{", "2", "}"}]}], 
+                          "]"}]}], ";", RowBox[{"If", "[", RowBox[{RowBox[
+                          {"!", RowBox[{"FreeQ", "[", RowBox[{"numbers", ",", 
+                          "$Failed"}], "]"}]}], ",", RowBox[{RowBox[{"Print", 
+                          "[", "\"Invalid decimal in CSV.\"", "]"}], ";", 
+                          RowBox[{"Abort", "[", "]"}]}]}], "]"}], ";", 
+                          RowBox[{"index", "=", RowBox[{"Association", "[", 
+                          RowBox[{RowBox[{"(", RowBox[{RowBox[{RowBox[
+                          {"Take", "[", RowBox[{"#1", ",", "3"}], "]"}], 
+                          "\[Rule]", RowBox[{"Drop", "[", RowBox[{"#1", ",", 
+                          "3"}], "]"}]}], "&"}], ")"}], "/@", "numbers"}], 
+                          "]"}]}], ";", RowBox[{"keys", "=", RowBox[
+                          {"reference", "\[LeftDoubleBracket]", RowBox[
+                          {"All", ",", RowBox[{"1", ";;", "3"}]}], 
+                          "\[RightDoubleBracket]"}]}], ";", RowBox[{"If", 
+                          "[", RowBox[{RowBox[{RowBox[{"Sort", "[", RowBox[
+                          {"Keys", "[", "index", "]"}], "]"}], "=!=", RowBox[
+                          {"Sort", "[", "keys", "]"}]}], ",", RowBox[
+                          {RowBox[{"Print", "[", 
+                          "\"CSV keys differ from the reference.\"", "]"}], 
+                          ";", RowBox[{"Abort", "[", "]"}]}]}], "]"}], ";", 
+                          RowBox[{"pairs", "=", RowBox[{RowBox[{"Function", 
+                          "[", RowBox[{"row", ",", RowBox[{"{", RowBox[
+                          {RowBox[{"row", "\[LeftDoubleBracket]", "3", 
+                          "\[RightDoubleBracket]"}], ",", RowBox[{"Max", "[", 
+                          RowBox[{"MapThread", "[", RowBox[{"gap", ",", 
+                          RowBox[{"{", RowBox[{RowBox[{"Drop", "[", RowBox[
+                          {"row", ",", "3"}], "]"}], ",", RowBox[{"index", 
+                          "[", RowBox[{"Take", "[", RowBox[{"row", ",", 
+                          "3"}], "]"}], "]"}]}], "}"}]}], "]"}], "]"}]}], 
+                          "}"}]}], "]"}], "/@", "reference"}]}], ";", RowBox[
+                          {"d55", "=", RowBox[{"Max", "[", RowBox[{"Cases", 
+                          "[", RowBox[{"pairs", ",", RowBox[{RowBox[{"{", 
+                          RowBox[{"55", ",", "d_"}], "}"}], "\[RuleDelayed]", 
+                          "d"}]}], "]"}], "]"}]}], ";", RowBox[{"d75", "=", 
+                          RowBox[{"Max", "[", RowBox[{"Cases", "[", RowBox[
+                          {"pairs", ",", RowBox[{RowBox[{"{", RowBox[{"75", 
+                          ",", "d_"}], "}"}], "\[RuleDelayed]", "d"}]}], 
+                          "]"}], "]"}]}], ";", RowBox[{"If", "[", RowBox[
+                          {RowBox[{"!", RowBox[{"TrueQ", "[", RowBox[{RowBox[
+                          {"d55", "<", FractionBox["1", SuperscriptBox["10", 
+                          "44"]]}], "&&", RowBox[{"d75", "<", FractionBox[
+                          "1", SuperscriptBox["10", "64"]]}]}], "]"}]}], ",", 
+                          RowBox[{RowBox[{"Print", "[", RowBox[
+                          {"\"Tolerance exceeded: \"", ",", RowBox[{"N", "[", 
+                          RowBox[{RowBox[{"{", RowBox[{"d55", ",", "d75"}], 
+                          "}"}], ",", "8"}], "]"}]}], "]"}], ";", RowBox[
+                          {"Abort", "[", "]"}]}]}], "]"}], ";", RowBox[
+                          {"Association", "[", RowBox[{RowBox[
+                          {"\"Matched rows\"", "\[Rule]", RowBox[{"Length", 
+                          "[", "pairs", "]"}]}], ",", RowBox[
+                          {"\"Fields compared per row\"", "\[Rule]", "17"}], 
+                          ",", RowBox[{
+                          "\"Maximum absolute difference, 55 digits\"", 
+                          "\[Rule]", RowBox[{"N", "[", RowBox[{"d55", ",", 
+                          "8"}], "]"}]}], ",", RowBox[{
+                          "\"Maximum absolute difference, 75 digits\"", 
+                          "\[Rule]", RowBox[{"N", "[", RowBox[{"d75", ",", 
+                          "8"}], "]"}]}]}], "]"}]}]}], "]"}]}], "]"}]}]], 
+               "Input", CellLabel -> " In[10]:=", ExpressionUUID -> 
+                "609d976a-2155-4a1a-a03a-9e4abd1108ef"], Cell[OutputFormData[
+                "<|Matched rows -> 294, Fields compared per row -> 17, \
+Maximum absolute difference, 55 digits -> \
+3.0081021981648527607321739196777`8.*^-46, Maximum absolute difference, 75 \
+digits -> 3.81159183307172811640946359038`8.*^-67|>"], "Output", 
+               CellChangeTimes -> {4.0043731864804897*^9, 
+                 4.004373287190637*^9}, CellLabel -> "", ExpressionUUID -> 
+                "f2368002-fc26-44cc-98e6-be189eca238d"]}, Open]]}, Open]]}, 
+       Open]]}, Open]]}, WindowSize -> {1050, 760}, 
+ WindowMargins -> {{210, Automatic}, {29, Automatic}}, Visible -> True, 
+ CellContext -> Notebook, FrontEndVersion -> 
+  "15.0 for Mac OS X ARM (64-bit) (July 2, 2026)", 
+ StyleDefinitions -> "Default.nb", ExpressionUUID -> 
+  "9b007861-89b1-481c-93d4-1b2fe7f3c608"]
