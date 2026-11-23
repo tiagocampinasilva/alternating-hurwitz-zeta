@@ -31,6 +31,7 @@
 \widowpenalty=6000
 \clubpenalty=6000
 \hypersetup{pdftitle={Explicit Uniform Remainder Estimate for the Alternating Hurwitz Zeta Function in a Joint Large-Parameter Regime},pdfauthor={Tiago Manuel Serafim Campina da Silva},pdfdisplaydoctitle=true}
+\DeclareRobustCommand{\suppfile}[2]{\href{https://github.com/tiagocampinasilva/alternating-hurwitz-zeta/blob/v1.0.0/#1}{#2}}
 \begin{document}
 \maketitle
 \pdfbookmark[1]{Abstract}{abstract}
@@ -387,23 +388,23 @@ Substituting the whole-axis estimate of Lemma~\ref{lem:global} instead gives
 Either residual estimate suffices for Theorem~\ref{thm:main}.
 
 \section{Numerical cross-checks}\label{sec:numerics}
-We evaluated \eqref{eq:zeta}--\eqref{eq:G} in Wolfram Mathematica 15.0.1
+We evaluated \eqref{eq:zeta}--\eqref{eq:G} in \suppfile{Verification/verification.wl}{Wolfram Mathematica 15.0.1}
 \cite{WolframMathematica} at the seven rational $q$ values in
-Table~\ref{tab:max} and the 41 points $x=-1+j/20$, $j=0,\ldots,40$.
+Table~\ref{tab:max} and the \suppfile{Verification/verification_results.csv}{41 points} $x=-1+j/20$, $j=0,\ldots,40$.
 We used 55 working digits and reevaluated the maximizing point in each row at 75 digits.
 The results agree to the digits shown. Figure~\ref{fig:slice} shows the
 slice with the largest sampled error.
 
-The main error bound was evaluated using exact rational arithmetic.
+The main error bound was evaluated using \suppfile{Verification/exact_coefficients.csv}{exact rational arithmetic}.
 Mathematica was also used to verify the majorant polynomial and the
-differential identity for the leading term. In Python, mpmath reproduced the grid and
-\texttt{fractions.Fraction} checked the moment recurrences and rational
-bounds. SymPy \cite{SymPy2017} verified nine symbolic identities,
+differential identity for the leading term. In Python, \suppfile{Python/numerical_checks.py}{mpmath} reproduced the grid and
+\suppfile{Python/exact_arithmetic.py}{\texttt{fractions.Fraction}} checked the moment recurrences and rational
+bounds. \suppfile{Python/identity_checks.py}{SymPy} \cite{SymPy2017} verified nine symbolic identities,
 including the kernel decomposition and the Taylor coefficients of the phase.
 
 \begin{table}[htbp]
 \centering
-\caption{Maxima of the scaled absolute error over the sampled $x$ values.}
+\caption{\suppfile{Verification/table_1.csv}{Maxima of the scaled absolute error over the sampled $x$ values.}}
 \label{tab:max}
 \begin{tabular}{rrr}\hline
 $q$ & $x$ at maximum & $\max q|R_q(x)|$ \\\hline
@@ -470,8 +471,8 @@ $q$ & $x$ at maximum & $\max q|R_q(x)|$ \\\hline
 \qbezier(237.500,59.9416)(240.625,61.5678)(243.750,63.1940)
 \qbezier(243.750,63.1940)(246.875,64.7795)(250.000,66.3650)
 \end{picture}
-\caption{Scaled error at $q=100$. Consecutive samples are joined by
-straight lines.}\label{fig:slice}
+\caption{\suppfile{Figures/figure_1.pdf}{Scaled error at $q=100$.} \suppfile{Figures/figure_1_data.csv}{Consecutive samples are joined by
+straight lines.}}\label{fig:slice}
 \end{figure}
 
 Figure~\ref{fig:correction} compares the absolute errors with one and two
@@ -1018,7 +1019,7 @@ two-term error, depending on $x$.
 \put(409.650,42.984){\rule{1.3pt}{1.3pt}}
 \put(412.350,43.486){\rule{1.3pt}{1.3pt}}
 \end{picture}
-\caption{Absolute error as a function of $x$ at the 41 grid points in
+\caption{\suppfile{Figures/figure_2.pdf}{Absolute error as a function of $x$ at the} \suppfile{Figures/figure_2_data.csv}{41 grid points} in
 each panel. The dashed curve with open markers shows $|Z_q(x)-F(x)|$.
 The solid curve with filled markers shows $|R_q(x)|$ after adding
 $G(x)/\sqrt{q}$. All panels use the same logarithmic vertical scale.}
@@ -1136,6 +1137,9 @@ This lower bound satisfies both comparisons at $r_0$.
 
 \bibitem{SymPy2017} Meurer, Aaron, Smith, Christopher P., Paprocki, Mateusz, et al. (2017). SymPy: symbolic computing in Python. PeerJ Computer Science, 3, e103, \href{https://doi.org/10.7717/peerj-cs.103}{doi: 10.7717/peerj-cs.103}.
 \end{thebibliography}
+
+\medskip
+{\small\noindent\textbf{Code and data.} The \href{https://github.com/tiagocampinasilva/alternating-hurwitz-zeta/blob/v1.0.0/Reproduce.nb}{Mathematica notebook}, data and verification scripts accompany this article in the \href{https://github.com/tiagocampinasilva/alternating-hurwitz-zeta}{GitHub repository}. The DOI for the computational supplement is \href{https://doi.org/10.5281/zenodo.24483843}{10.5281/zenodo.24483843}.\par}
 
 \medskip
 {\small\noindent\textit{Email:} \href{mailto:tiagocampinassilva@gmail.com}{tiagocampinassilva@gmail.com}\par}
